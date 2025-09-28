@@ -30,7 +30,7 @@ const PipelineStarter: React.FC<Props> = ({ deploymentName, autoDeleteRuns = fal
                         leftSection={<FaPlay size={18} />}
                         onClick={() => deploymentId && startFlow(deploymentId)}
                         loading={loading && status === "NOT_STARTED"}
-                        disabled={!deploymentId || status === "RUNNING" || status === "PENDING"}
+                        disabled={!deploymentId || status === "RUNNING" || status === "PENDING" || status === "SCHEDULED"}
                     >
                         Запустить Пайплайн
                     </Button>
@@ -40,7 +40,7 @@ const PipelineStarter: React.FC<Props> = ({ deploymentName, autoDeleteRuns = fal
                         color="red"
                         onClick={() => runId && stopFlow(runId)}
                         loading={stopLoading}
-                        disabled={!runId || status !== "RUNNING"}
+                        disabled={!runId || (status !== "RUNNING" && status !== "NOT_STARTED")}
                     >
                         Остановить Пайплайн
                     </Button>

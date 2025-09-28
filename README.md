@@ -13,3 +13,5 @@ docker buildx prune --all --force
 # http://192.168.1.77/dashboard
 
 # ENV NEXT_PUBLIC_BASE_PATH=/ui
+
+<!-- SCHEDULED -->
