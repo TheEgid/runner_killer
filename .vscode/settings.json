@@ -1,0 +1,15 @@
+{
+  "npm.packageManager": "pnpm",
+  "files.eol": "\n",
+  "eslint.workingDirectories": [
+    "main-applic"
+  ],
+  "eslint.format.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    "source.fixAll.stylelint": "always",
+  },
+  "eslint.options": {
+    "overrideConfigFile": "eslint.config.mjs"
+  }
+}

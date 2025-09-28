@@ -1,0 +1,7 @@
+@use "../../node_modules/reset-css/sass/reset" as *;
+@use "../../node_modules/@mantine/core/styles.css" as *;
+@use "../../node_modules/@mantine/dates/styles.css" as *;
+@use "../../node_modules/@mantine/notifications/styles.css" as *;
+
+// custom
+@use "./global" as *;

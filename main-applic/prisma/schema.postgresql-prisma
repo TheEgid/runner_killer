@@ -1,0 +1,24 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  output        = "./generated/prisma-client"
+  binaryTargets = ["native", "debian-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
+}
+
+model user {
+  id               String         @id @default(cuid())
+  username         String         @default("")
+  email            String?        @unique
+  isemailconfirmed Boolean        @default(true)
+  password         String?
+  role             String         @default("USER")
+  createdat        DateTime       @default(now())
+  updatedat        DateTime       @updatedAt
+  tokenversion     Int            @default(0)
+  // petitiondatas    petitiondata[]
+  // yieldrows        yieldrow[]
+}

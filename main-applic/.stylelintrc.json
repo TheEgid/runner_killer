@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json.schemastore.org/package",
+  "extends": [
+    "stylelint-order-config-standard",
+    "stylelint-config-standard-scss",
+    "@stylistic/stylelint-config"
+  ],
+  "plugins": [
+    "stylelint-order",
+    "stylelint-scss",
+    "@stylistic/stylelint-plugin"
+  ],
+  "rules": {
+    "@stylistic/indentation": 4,
+    "@stylistic/declaration-block-trailing-semicolon": "always",
+    "@stylistic/selector-list-comma-newline-after": null,
+    "rule-empty-line-before": "always",
+    "scss/at-extend-no-missing-placeholder": null,
+    "selector-class-pattern": null,
+    "scss/dollar-variable-pattern": "[a-z][a-zA-Z]+",
+    "order/order": [
+      "dollar-variables",
+      "at-rules",
+      "declarations",
+      "custom-properties",
+      "rules"
+    ],
+    "order/properties-order": [
+      "content",
+      {
+        "order": "flexible",
+        "properties": [
+          "position",
+          "top",
+          "right",
+          "bottom",
+          "left",
+          "z-index",
+          "order"
+        ]
+      },
+      {
+        "order": "flexible",
+        "properties": []
+      }
+    ]
+  }
+}

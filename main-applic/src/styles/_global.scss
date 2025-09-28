@@ -1,0 +1,45 @@
+// @use "./vars" as vars;
+
+$main-orange-color: rgb(227 82 5);
+$light-orange-color: rgb(225 143 0);
+
+.geo-custom-map {
+    height: 600px;
+}
+
+.geo-custom-map-wrapper {
+    @extend .geo-custom-map;
+}
+
+.geo-inside {
+    width: 220px;
+    height: 35px;
+    font-size: 70% !important;
+    text-align: center;
+    background: white;
+}
+
+input[type="radio"], input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.mantine-Fieldset-legend {
+    font-weight: bold;
+    color: rgb(89 41 36);
+}
+
+.mantine-Fieldset-root {
+    border-color: rgb(rgb(89 41 36), 0.4);
+    padding: 10px;
+    padding-top: 3px;
+}
+
+// .mantine-Table-tbody, .mantine-Table-td, .mantine-Table-tr {
+
+.mantine-Table-td {
+    vertical-align: middle !important;
+}
+
+// .orange-color {
+//     color: #fd7e14 !important;
+// }

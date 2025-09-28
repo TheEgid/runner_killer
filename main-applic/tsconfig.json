@@ -1,0 +1,53 @@
+{
+    "$schema": "http://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "removeComments": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": true,
+        "outDir": "./build",
+        "resolveJsonModule": true,
+        "baseUrl": "./",
+        "incremental": true,
+        "skipLibCheck": true,
+        "strictNullChecks": false,
+        "noImplicitAny": false,
+        "strictBindCallApply": false,
+        "noFallthroughCasesInSwitch": false,
+        "alwaysStrict": true,
+        "esModuleInterop": true,
+        "jsx": "preserve",
+        "target": "ES2022",
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
+        "allowJs": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "isolatedModules": true,
+        "plugins": [
+            {
+                "name": "next"
+            }
+        ]
+    },
+    "include": [
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        ".next/types/**/*.ts",
+        "next.config.ts",
+        "build/types/**/*.ts",
+        "eslint.config.mjs",
+        "__tests__/stream.test.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
