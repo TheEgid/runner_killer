@@ -60,7 +60,9 @@ class VectorIngestionService:
 
             # Добавляем в векторную БД
             try:
-                self.vector_store.add_chunks(chunks)
+                status = self.vector_store.add_chunks(chunks)
+                if not status:
+                    raise Exception("Failed!")
                 if hasattr(self.vector_store, 'mark_url_processed'):
                     self.vector_store.mark_url_processed(task.url)
             except Exception as e:

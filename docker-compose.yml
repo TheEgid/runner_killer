@@ -101,8 +101,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./python-applic/data:/app/data
-      - prefect_data:/app/prefect
+      - ./python-applic/pipeline_cache:/app/pipeline_cache
 
   redis:
     image: redis:7-alpine
@@ -120,5 +119,4 @@ services:
 
 volumes:
   database_volume:
-  prefect_data:
   pnpm_cache:
