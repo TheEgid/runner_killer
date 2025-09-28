@@ -82,7 +82,7 @@ export const useFlowRun = (autoDeleteRuns = false) => {
 
     const stopFlow = async (runId: string) => {
         if (!runId) { return; }
-        await api.cancelFlowRun(runId);
+        await api.deleteFlowRun(runId);
         setRunId(null);
         setStatus("STOPPED");
     };

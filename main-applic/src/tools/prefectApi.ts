@@ -6,6 +6,13 @@ const API_BASE
         ? "http://127.0.0.1:4200/api"
         : "/api/python";
 
+export interface LogEntry {
+    message: string,
+    timestamp: string,
+    level?: string,
+    flow_run_id?: string
+}
+
 export interface PrefectError {
     message: string,
     status?: number
