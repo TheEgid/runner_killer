@@ -2,7 +2,8 @@ import os
 import time
 from supabase import create_client, Client # type: ignore
 from typing import List, Dict, Any
-import cohere # type: ignore
+from services.local_embedder import LocalCohereClient
+# import cohere # type: ignore
 
 from models import SearchResult
 
@@ -12,19 +13,20 @@ class VectorStoreService:
         self.logger = logger
         self.supabase_url = os.getenv("SUPABASE_URL")
         self.supabase_key = os.getenv("SUPABASE_KEY")
-        self.cohere_api_key = os.getenv("COHERE_API_KEY")
+        # self.cohere_api_key = os.getenv("COHERE_API_KEY")
 
-        if not all([self.supabase_url, self.supabase_key, self.cohere_api_key]):
+        if not all([self.supabase_url, self.supabase_key]):
             missing = [var for var, val in [
                 ("SUPABASE_URL", self.supabase_url),
                 ("SUPABASE_KEY", self.supabase_key),
-                ("COHERE_API_KEY", self.cohere_api_key)
+                # ("COHERE_API_KEY", self.cohere_api_key)
             ] if not val]
             raise ValueError(f"Отсутствуют переменные окружения: {', '.join(missing)}")
 
         try:
             self.supabase: Client = create_client(self.supabase_url, self.supabase_key)
-            self.cohere_client = cohere.Client(self.cohere_api_key)
+            # self.cohere_client = cohere.Client(self.cohere_api_key)
+            self.cohere_client = LocalCohereClient()
             self.logger.info("✅ VectorStoreService инициализирован успешно")
         except Exception as e:
             self.logger.error(f"❌ Ошибка инициализации VectorStoreService: {e}")
@@ -44,20 +46,31 @@ class VectorStoreService:
                 self.logger.error("❌ Не найдено текстов для создания эмбеддингов")
                 return False
 
-            response = self.cohere_client.embed(
-                texts=texts,
-                model="embed-multilingual-light-v3.0",
-                input_type="search_document"
-            )
-            embeddings = response.embeddings
+            # response = self.cohere_client.embed(
+            #     texts=texts,
+            #     model="embed-multilingual-light-v3.0",
+            #     input_type="search_document"
+            # )
+            # embeddings = response.embeddings embed_documents
+            response = self.cohere_client.embed_documents(texts=texts)
+            embeddings_list = response.embeddings.tolist()
 
             # ✅ Проверка размерности
-            if embeddings and len(embeddings[0]) != 384:
-                self.logger.error(f"❌ Неожиданная размерность эмбеддинга: {len(embeddings[0])}, ожидается 384")
+            if len(embeddings_list) == 0:
+                self.logger.error("❌ Эмбеддинги пустые")
                 return False
 
+            # Проверка размерности первого эмбеддинга
+            if len(embeddings_list[0]) != 384:
+                self.logger.error(f"❌ Неожиданная размерность эмбеддинга: {len(embeddings_list[0])}, ожидается 384")
+                return False
+
+            # if embeddings and len(embeddings[0]) != 384:
+            #     self.logger.error(f"❌ Неожиданная размерность эмбеддинга: {len(embeddings[0])}, ожидается 384")
+            #     return False
+
             rows = []
-            for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
+            for i, (chunk, embedding) in enumerate(zip(chunks, embeddings_list)):
                 # Берем метадату из чанка, если она есть
                 metadata = dict(chunk.get("metadata", {}))
 
