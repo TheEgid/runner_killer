@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge, Button, Group, Stack, Text, Title } from "@mantine/core";
-import { FaPlay, FaRegSquare } from 'react-icons/fa';
+import { FaPlay, FaRegSquare } from "react-icons/fa";
 import { getBadgeColor, LogsCard } from "./Helpers";
 import { useDeployment, useFlowRun } from "./hooks";
 

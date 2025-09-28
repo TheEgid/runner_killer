@@ -11,6 +11,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      verdaccio:
+        condition: service_healthy
     restart: on-failure
     env_file:
       - .env
@@ -19,6 +21,8 @@ services:
       REDIS_PASSW: "${REDIS_PASSW}"
       NEXT_BASE_PATH: "/ui"
       DATABASE_URL: "${DATABASE_URL}"
+      NPM_CONFIG_REGISTRY: "http://verdaccio:4873"
+      PNPM_HOME: "/root/.pnpm-store"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:3006/ui/api/healthcheck"]
       interval: 5s
@@ -117,7 +121,26 @@ services:
       retries: 5
     restart: unless-stopped
 
+  verdaccio:
+    image: verdaccio/verdaccio
+    container_name: verdaccio_container
+    # ports:
+      # - "4873:4873"  # 👈 наружу если нужно
+    environment:
+      TZ: "Europe/Moscow"
+    volumes:
+      - ./verdaccio/storage:/verdaccio/storage
+      - ./verdaccio/conf:/verdaccio/conf
+      - ./verdaccio/plugins:/verdaccio/plugins
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:4873/-/ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+
 volumes:
   database_volume:
   prefect_data:
   pnpm_cache:
+  verdaccio_storage: {}

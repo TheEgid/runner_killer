@@ -1,140 +1,91 @@
-import { useState, useRef, useEffect } from "react";
-import {
-    type LogEntry,
-    createFlowRun,
-    stopFlowRun,
-    getDeploymentId,
-    getFlowRun,
-    getLogs,
-    isPrefectError,
-} from "../../tools/prefectApi";
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { useState, useEffect, useRef, useCallback } from "react";
+import * as api from "../../tools/prefectApi";
+import type { FlowRun } from "../../tools/prefectApi";
 
-export const useDeployment = (deploymentName: string): { deploymentId: string | null, error: string | null } => {
+export const useDeployment = (deploymentName: string) => {
     const [deploymentId, setDeploymentId] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!deploymentName) { return; }
-
-        getDeploymentId(deploymentName)
-            .then((res) => {
-                if (typeof res === "string") { setDeploymentId(res); }
-                else { setError(isPrefectError(res) ? res.message : "Deployment не найден"); }
-            })
-            .catch(() => setError("Ошибка загрузки Deployment"));
+        void api.getDeploymentId(deploymentName).then(({ data, error }) => {
+            if (error) { setError(error.message); }
+            else { setDeploymentId(data ?? null); }
+        });
     }, [deploymentName]);
 
     return { deploymentId, error };
 };
 
-export type FlowRunResponse = { id: string, state?: { type: string }, message?: string };
-
-export const useFlowRun = (autoDeleteRuns = false): any => {
+export const useFlowRun = (autoDeleteRuns = false) => {
     const [runId, setRunId] = useState<string | null>(null);
     const [status, setStatus] = useState("NOT_STARTED");
-    const [logs, setLogs] = useState<LogEntry[]>([]);
+    const [logs, setLogs] = useState<any[]>([]);
     const [runtime, setRuntime] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Функция обновления статуса и логов
-    const updateRun = async (currentRunId: string | null, startTime: Date | null): Promise<void> => {
-        if (!currentRunId) { return; }
+    const updateRun = useCallback(
+        async (startTime: Date | null) => {
+            if (!runId) { return; }
+            const { data: flowRun, error } = await api.getFlowRun(runId);
 
-        try {
-            const flowRun = (await getFlowRun(currentRunId)) as FlowRunResponse | null;
-
-            if (!flowRun || isPrefectError(flowRun)) {
+            if (error || !flowRun) {
+                setError(error?.message || "FlowRun not found");
                 setStatus("FAILED");
-                setError(flowRun?.message || "Run не найден");
                 setLoading(false);
                 return;
             }
+            setStatus((flowRun as FlowRun).state?.type || "UNKNOWN");
 
-            const newStatus = flowRun.state?.type || "UNKNOWN";
+            const { data: logsRes } = await api.getLogs(runId, startTime ?? undefined);
 
-            setStatus(newStatus);
+            if (logsRes) { setLogs(logsRes); }
 
-            const logsResult = await getLogs(currentRunId, startTime);
-
-            if (Array.isArray(logsResult)) { setLogs(logsResult); }
-            else if (isPrefectError(logsResult)) { setError(logsResult.message); }
-
-            if (newStatus === "RUNNING" && startTime) {
-                setRuntime(Math.round((Date.now() - startTime.getTime()) / 1000));
-            }
+            if ((flowRun as FlowRun).state?.type === "RUNNING" && startTime) { setRuntime(Math.round((Date.now() - startTime.getTime()) / 1000)); }
             else { setRuntime(0); }
 
-            if ((newStatus === "COMPLETED" || newStatus === "FAILED") && autoDeleteRuns && newStatus === "COMPLETED") {
-                await stopFlowRun(currentRunId).catch(console.error);
+            if (["COMPLETED", "FAILED"].includes((flowRun as FlowRun).state?.type) && autoDeleteRuns) {
+                await api.deleteFlowRun(runId);
             }
 
-            if (newStatus !== "RUNNING") { setLoading(false); }
-        }
-        catch (err) {
-            console.error(err);
-            setStatus("FAILED");
-            setError("Ошибка обновления данных");
-            setLoading(false);
-        }
-    };
+            if ((flowRun as FlowRun).state?.type !== "RUNNING") { setLoading(false); }
+        },
+        [runId, autoDeleteRuns],
+    );
 
-    // Авто-обновление через интервал
     useEffect(() => {
         if (!runId) { return; }
-
         const startTime = new Date();
 
         setLoading(true);
+        intervalRef.current = setInterval(() => updateRun(startTime), 2000);
+        return () => intervalRef.current && clearInterval(intervalRef.current);
+    }, [runId, updateRun]);
 
-        intervalRef.current = setInterval(() => updateRun(runId, startTime), 2000);
-
-        return (): void => {
-            if (intervalRef.current) { clearInterval(intervalRef.current); }
-        };
-    }, [runId, autoDeleteRuns]);
-
-    const startFlow = async (deploymentId: string): Promise<void> => {
-        setError(null);
+    const startFlow = async (deploymentId: string, params = {}) => {
         setLoading(true);
-        const startTime = new Date();
+        const { data, error } = await api.createFlowRun(deploymentId, params);
 
-        try {
-            const result = await createFlowRun(deploymentId, { resume: true });
-
-            if (isPrefectError(result)) {
-                setError(result.message);
-                setStatus("FAILED");
-            }
-            else {
-                setRunId(result);
-                await updateRun(result, startTime);
-            }
-        }
-        catch {
-            setError("Ошибка запуска FlowRun");
+        if (error) {
+            setError(error.message);
             setStatus("FAILED");
         }
-        finally {
-            setLoading(false);
+        else if (data) {
+            setRunId(data);
+            void updateRun(new Date());
         }
+        setLoading(false);
     };
 
-    const stopFlow = async (runIdToStop: string): Promise<void> => {
-        try {
-            const result = await stopFlowRun(runIdToStop);
-
-            if (isPrefectError(result)) { setError(result.message); }
-            setRunId(null);
-            setStatus("STOPPED");
-            setLoading(false);
-        }
-        catch {
-            setError("Не удалось остановить FlowRun");
-        }
+    const stopFlow = async (runId: string) => {
+        if (!runId) { return; }
+        await api.cancelFlowRun(runId);
+        setRunId(null);
+        setStatus("STOPPED");
     };
 
-    return { runId, status, logs, runtime, loading, error, startFlow, stopFlow };
+    return { runId, status, logs, runtime, loading, error, startFlow, stopFlow, updateRun };
 };
