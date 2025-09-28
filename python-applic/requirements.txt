@@ -1,9 +1,6 @@
-
-sentence_transformers==5.1.1
 prefect==3.4.19
 pandas==2.3.2
 openpyxl==3.1.5
-cohere==5.17.0
 litellm==1.77.1
 supabase==2.18.1
 beautifulsoup4==4.13.5
@@ -16,3 +13,4 @@ Crawl4AI==0.7.4
 dacite==1.9.2
 pydantic==2.11.9
 hf_xet==1.1.10
+sentence-transformers

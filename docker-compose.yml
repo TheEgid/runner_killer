@@ -26,9 +26,9 @@ services:
       timeout: 3s
       retries: 3
       start_period: 10s
-    volumes:
-      - ./main-applic/public/temporary:/app/public/temporary
-      - pnpm_cache:/root/.pnpm-store
+    # volumes:
+    #   - ./main-applic/public/temporary:/app/public/temporary
+    #   - pnpm_cache:/root/.pnpm-store
 
   nginx:
     image: nginx:1.27.5-alpine
@@ -119,4 +119,4 @@ services:
 
 volumes:
   database_volume:
-  pnpm_cache:
+  # pnpm_cache:

@@ -1,0 +1,31 @@
+{
+  "success": [],
+  "errors": [
+    {
+      "url": "https://guru.wildberries.ru/article/on-hochet-poprobovat-a-ya-ne-uverena-kak-bezopasno-nachat-ispolzovat-poppersy-v-pare-i-ne-poteryat-sebya-1746218194",
+      "status": "error",
+      "error": "Не удалось обработать"
+    },
+    {
+      "url": "https://habr.com/ru/articles/132146/",
+      "status": "error",
+      "error": "Не удалось обработать"
+    },
+    {
+      "url": "https://habr.com/ru/articles/144623/",
+      "status": "error",
+      "error": "Не удалось обработать"
+    },
+    {
+      "url": "https://habr.com/ru/articles/252075/",
+      "status": "error",
+      "error": "Не удалось обработать"
+    },
+    {
+      "url": "https://habr.com/ru/articles/30826/",
+      "status": "error",
+      "error": "Не удалось обработать"
+    }
+  ],
+  "skipped": []
+}

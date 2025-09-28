@@ -1,5 +1,5 @@
 import time
-from prefect import task
+from prefect import task # type: ignore
 from typing import List, Dict
 from models import LightTask
 from services.vector_ingestion_service import VectorIngestionService

@@ -1,6 +1,8 @@
-from sentence_transformers import SentenceTransformer # type: ignore
+import os
 from typing import List
+from sentence_transformers import SentenceTransformer # type: ignore
 import numpy as np # type: ignore
+import torch # type: ignore
 
 class LocalCohereEmbedResponse:
     """Имитация объекта response Cohere с атрибутом .embeddings"""
@@ -15,10 +17,13 @@ class LocalCohereEmbedResponse:
 class LocalCohereClient:
     def __init__(self, model_name: str = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'):
         """
-        Инициализация локального клиента для эмбеддингов.
+        Инициализация локального клиента для эмбеддингов на CPU.
         """
+        os.environ["CUDA_VISIBLE_DEVICES"] = ""  # отключаем GPU
+        torch.device("cpu")                      # CPU
+
         self.model_name = model_name
-        self.model = SentenceTransformer(model_name)
+        self.model = SentenceTransformer(model_name, device='cpu')
 
     def embed(self, texts: List[str], input_type: str = 'default', batch_size: int = 32) -> LocalCohereEmbedResponse:
         """

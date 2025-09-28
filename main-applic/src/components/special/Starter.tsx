@@ -20,8 +20,7 @@ const PipelineStarter: React.FC<Props> = ({ deploymentName, autoDeleteRuns = fal
         <>
             <Title mt="md" order={1}>
                 <Text ff="monospace">
-                    Пайплайн
-                    {deploymentName}
+                    {`Пайплайн ${deploymentName}`}
                 </Text>
             </Title>
 
@@ -31,7 +30,7 @@ const PipelineStarter: React.FC<Props> = ({ deploymentName, autoDeleteRuns = fal
                         leftSection={<FaPlay size={18} />}
                         onClick={() => deploymentId && startFlow(deploymentId)}
                         loading={loading && status === "NOT_STARTED"}
-                        disabled={!deploymentId || status === "RUNNING"}
+                        disabled={!deploymentId || status === "RUNNING" || status === "PENDING"}
                     >
                         Запустить Пайплайн
                     </Button>

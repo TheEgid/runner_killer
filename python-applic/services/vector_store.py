@@ -3,7 +3,7 @@ import time
 from supabase import create_client, Client # type: ignore
 from typing import List, Dict, Any
 from services.local_embedder import LocalCohereClient
-# import cohere # type: ignore
+# import import cohere # type: ignore
 
 from models import SearchResult
 
@@ -62,7 +62,7 @@ class VectorStoreService:
 
             # Проверка размерности первого эмбеддинга
             if len(embeddings_list[0]) != 384:
-                self.logger.error(f"❌ Неожиданная размерность эмбеддинга: {len(embeddings_list[0])}, ожидается 384")
+                self.logger.error(f"❌ Неожиданная размерность эмбеддинга запроса: {len(embeddings_list)}, ожидается 384")
                 return False
 
             # if embeddings and len(embeddings[0]) != 384:
@@ -122,24 +122,29 @@ class VectorStoreService:
         try:
             self.logger.info(f"🔍 Поиск по запросу: '{query[:50]}...'")
 
-            # ✅ Создаем эмбеддинг для запроса (размерность 384)
-            query_response = self.cohere_client.embed(
-                texts=[query],
-                model="embed-multilingual-light-v3.0",
-                input_type='search_query'
-            )
+            # # ✅ Создаем эмбеддинг для запроса (размерность 384)
+            query_response = self.cohere_client.embed_query(query)
+            query_embedding_list = query_response.tolist()
 
-            query_embedding = query_response.embeddings[0]
+            # Проверка размерности
+            if len(query_embedding_list) != 384:
+                self.logger.error(f"❌ Неожиданная размерность эмбеддинга запроса: {len(query_embedding_list)}, ожидается 384")
 
-            if len(query_embedding) != 384:
-                self.logger.error(f"❌ Неожиданная размерность query эмбеддинга: {len(query_embedding)}")
-                return []
+            # query_response = self.cohere_client.embed(
+            #     texts=[query],
+            #     model="embed-multilingual-light-v3.0",
+            #     input_type='search_query'
+            # )
+            # query_embedding = query_response.embeddings[0]
+            # if len(query_embedding) != 384:
+            #     self.logger.error(f"❌ Неожиданная размерность query эмбеддинга: {len(query_embedding)}")
+            #     return []
 
             # ✅ Используем RPC функцию
             result = self.supabase.rpc(
                 'match_documents_novaya_v2',
                 {
-                    'query_embedding': query_embedding,
+                    'query_embedding': query_embedding_list,
                     'match_threshold': similarity_threshold,
                     'match_count': top_k
                 }

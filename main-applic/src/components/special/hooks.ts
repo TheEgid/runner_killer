@@ -47,9 +47,9 @@ export const useFlowRun = (autoDeleteRuns = false) => {
             if ((flowRun as FlowRun).state?.type === "RUNNING" && startTime) { setRuntime(Math.round((Date.now() - startTime.getTime()) / 1000)); }
             else { setRuntime(0); }
 
-            if (["COMPLETED", "FAILED"].includes((flowRun as FlowRun).state?.type) && autoDeleteRuns) {
-                await api.deleteFlowRun(runId);
-            }
+            // if (["COMPLETED", "FAILED"].includes((flowRun as FlowRun).state?.type) && autoDeleteRuns) {
+            //     await api.deleteFlowRun(runId);
+            // }
 
             if ((flowRun as FlowRun).state?.type !== "RUNNING") { setLoading(false); }
         },
