@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useState, useEffect, useCallback, useRef } from "react";
-import {
-    createFlowRun,
-    getFlowRun,
-    getLogs,
-    cancelFlowRunCompletely,
-    getDeploymentId,
-} from "src/tools/prefectApi";
+import { cancelFlowRunCompletely, createFlowRun, getDeploymentId, getFlowRun, getLogs } from "src/tools/prefectApi";
 
 export const useDeployment = (deploymentName: string) => {
     const [deploymentId, setDeploymentId] = useState<string | null>(null);
@@ -41,17 +35,28 @@ export const useFlowRun = () => {
         if (flowError || !flowRun) {
             setError(flowError?.message || "FlowRun not found");
             setStatus("FAILED");
+            // eslint-disable-next-line @stylistic/max-statements-per-line
+            if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
             return;
         }
 
-        setStatus(flowRun.state?.type || "UNKNOWN");
+        const currentStatus = flowRun.state?.type || "UNKNOWN";
+
+        setStatus(currentStatus);
 
         if (startTimeRef.current) {
-            const { data: logsRes } = await getLogs(id, 100, startTimeRef.current);
+            const { data: logsRes } = await getLogs(id, 100);
 
             if (logsRes) { setLogs(logsRes); }
-
             setRuntime(Math.round((Date.now() - startTimeRef.current.getTime()) / 1000));
+        }
+
+        // Останавливаем таймер, если flow завершён или отменён
+        if (["COMPLETED", "FAILED", "Cancelled"].includes(currentStatus)) {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
         }
     }, []);
 
@@ -87,7 +92,14 @@ export const useFlowRun = () => {
 
         if (stopError) { setError(stopError.message); }
 
-        await updateRun(id);
+        let attempts = 0;
+
+        while (attempts < 10) { // максимум 10 попыток
+            await updateRun(id);
+            if (status === "Cancelled") { break; }
+            await new Promise((res) => setTimeout(res, 500)); // пауза 0.5 сек
+            attempts++;
+        }
 
         setLoading(false);
     };
