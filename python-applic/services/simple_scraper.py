@@ -237,7 +237,8 @@ class SimpleScraperService:
         logger: logging.Logger,
         use_llm: bool = False,  # По умолчанию off для стабильности
         preserve_formatting: bool = True,
-        js_delay: float = 10.0  # Вернул 10s (рабочий)
+        js_delay: float = 3.0
+        # js_delay: float = 10.0  # Вернул 10s (рабочий)
     ):
         self.logger = logger
         self.preserve_formatting = preserve_formatting
@@ -373,45 +374,28 @@ class SimpleScraperService:
         return False
 
 
-# Тесты: Сначала Habr, потом Вики
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     logger_test = logging.getLogger(__name__)
 
     # Тест Habr
-    print("\n🕷️ Testing Habr (delay=10s)...")
-    with SimpleScraperService(logger=logger_test, js_delay=10.0) as scraper:
+    print("\n🕷️ Testing Habr")
+    with SimpleScraperService(logger=logger_test, js_delay=3.0) as scraper:
         url_habr = "https://habr.com/ru/articles/951488/"
         text_habr = scraper.scrape_page(url_habr)
         if text_habr:
             print(f"✅ Habr success! Length: {len(text_habr)} chars")
-            print(f"Sample: {text_habr[:200]}...")
-            if len(text_habr) > 10000:
-                print("🎉 Full Habr article!")
-                with open("habr_951488.txt", "w", encoding="utf-8") as f:
-                    f.write(text_habr)
-                print("💾 Saved to 'habr_951488.txt'")
-            else:
-                print("⚠️ Habr partial.")
-            print(text_habr[:1000])  # Печать для короткого
+            print(text_habr[:1000])  # Печать для отладки
         else:
             print("❌ Habr failed.")
 
     # Тест Википедии
-    print("\n🕷️ Testing Wikipedia (delay=10s)...")
-    with SimpleScraperService(logger=logger_test, js_delay=10.0) as scraper:
+    print("\n🕷️ Testing Wikipedia")
+    with SimpleScraperService(logger=logger_test, js_delay=3.0) as scraper:
         url_wiki = "https://ru.wikipedia.org/wiki/Кошка"
         text_wiki = scraper.scrape_page(url_wiki)
         if text_wiki:
             print(f"✅ Wiki success! Length: {len(text_wiki)} chars")
-            print(f"Sample: {text_wiki[:200]}...")
-            if len(text_wiki) > 15000:
-                print("🎉 Full Wiki article!")
-                with open("wiki_koshka.txt", "w", encoding="utf-8") as f:
-                    f.write(text_wiki)
-                print("💾 Saved to 'wiki_koshka.txt'")
-            else:
-                print("⚠️ Wiki partial.")
             print(text_wiki[:1000])  # Печать для отладки
         else:
             print("❌ Wiki failed.")
