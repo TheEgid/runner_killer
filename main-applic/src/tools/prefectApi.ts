@@ -35,7 +35,6 @@ export interface TaskRun {
 
 export type Result<T> = { data?: T, error?: PrefectError };
 
-// --- Helpers ---
 const handleError = (e: unknown, fallback: string): PrefectError =>
     e instanceof HTTPError
         ? { message: e.message, status: e.response.status }
@@ -50,28 +49,25 @@ async function request<T>(fn: () => Promise<T>, fallback: string): Promise<Resul
     }
 }
 
-// --- Cancel flow + all tasks ---
 export async function abortFlowRunCompletely(id: string): Promise<Result<boolean>> {
     try {
-    // 1. Получаем task runs для flow run
+        // 1. Получаем task runs
         const taskRuns: TaskRun[] = await ky
-            .post(`${API_BASE}/task_runs/filter`, {
-                json: { "flow_run.id": { any_: [id] } },
-            })
+            .post(`${API_BASE}/task_runs/filter`, { json: { flow_run_id: { any_: [id] } } })
             .json<TaskRun[]>();
 
         // 2. Отменяем все task runs
         await Promise.all(
             taskRuns.map((t) =>
                 ky.post(`${API_BASE}/task_runs/${t.id}/set_state`, {
-                    json: { state: { type: "Cancelled", message: "Cancelled via API" } },
+                    json: { state: { type: "CANCELLED" } },
                 }),
             ),
         );
 
         // 3. Отменяем сам flow run
         await ky.post(`${API_BASE}/flow_runs/${id}/set_state`, {
-            json: { state: { type: "Cancelled", message: "Cancelled via API" } },
+            json: { state: { type: "CANCELLED" } },
         });
 
         return { data: true };
