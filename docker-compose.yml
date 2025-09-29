@@ -1,3 +1,4 @@
+
 services:
   main-applic:
     build:
@@ -20,15 +21,15 @@ services:
       NEXT_BASE_PATH: "/ui"
       DATABASE_URL: "${DATABASE_URL}"
       PNPM_HOME: "/root/.pnpm-store"
+    volumes:
+      # - ./main-applic/public/temporary:/app/public/temporary
+      - pnpm_cache:/root/.pnpm-store
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:3006/ui/api/healthcheck"]
       interval: 5s
       timeout: 3s
       retries: 3
       start_period: 10s
-    # volumes:
-    #   - ./main-applic/public/temporary:/app/public/temporary
-    #   - pnpm_cache:/root/.pnpm-store
 
   nginx:
     image: nginx:1.27.5-alpine
@@ -119,4 +120,4 @@ services:
 
 volumes:
   database_volume:
-  # pnpm_cache:
+  pnpm_cache:

@@ -77,8 +77,8 @@ class LightPipeline:
 
         if processed_results["errors"]:
             self.logger.warning("❌ Проблемные URL:")
-            for err in processed_results["errors"][:5]:
-                self.logger.warning(f"  - {err['url']}: {err['error']}")
+            error_string = ", ".join(f"{err['url']}: {err['error']}" for err in processed_results["errors"][:5])
+            self.logger.warning(error_string)
 
         return {"light_tasks": light_tasks, "processed_results": processed_results, "stats": stats}
-#light_tasks = self.data_input.read_light_tasks(spreadsheet_id, sheet_name)
+        #light_tasks = self.data_input.read_light_tasks(spreadsheet_id, sheet_name)

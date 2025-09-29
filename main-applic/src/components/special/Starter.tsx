@@ -41,7 +41,7 @@ const PipelineStarter: React.FC<Props> = ({ deploymentName }) => {
                         color="red"
                         onClick={() => runId && stopFlow(runId)}
                         loading={stopLoading}
-                        // disabled={!runId || !["RUNNING", "NOT_STARTED"].includes(status)}
+                        disabled={!runId || !["RUNNING", "NOT_STARTED", "SCHEDULED"].includes(status)}
                     >
                         Остановить Пайплайн
                     </Button>

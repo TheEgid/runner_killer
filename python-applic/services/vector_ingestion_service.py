@@ -33,7 +33,7 @@ class VectorIngestionService:
             )
 
             # ✅ Используем метод scrape_page для гарантии чистого текста
-            content = self.scraper.scrape_page(task.url, clean_html=True)
+            content = self.scraper.scrape_page(task.url)
 
             # ✅ Дополнительная проверка
             if not content or len(content.strip()) < 100:

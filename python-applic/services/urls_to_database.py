@@ -14,10 +14,18 @@ def process_single_url(task_obj: LightTask, vector_ingestion: VectorIngestionSer
     logger.info(f"🔄 Обработка {task_obj.url}")
     try:
         success = vector_ingestion.ingest_url(task_obj)
+        if not success:
+            # Проверяем, не связано ли это с rate limit
+            # Добавьте соответствующую логику здесь
+            pass
         return {"url": task_obj.url, "status": "completed" if success else "error"}
     except Exception as e:
         logger.error(f"❌ Ошибка {task_obj.url}: {e}")
-        return {"url": task_obj.url, "status": "error", "error": str(e)}
+        error_msg = str(e)
+        # Если это rate limit, возвращаем специальный статус
+        if "rate limit" in error_msg.lower() or "quota" in error_msg.lower():
+            return {"url": task_obj.url, "status": "skipped", "error": "Rate limit исчерпан"}
+        return {"url": task_obj.url, "status": "error", "error": error_msg}
 
 
 async def check_if_cancelled(flow_run_id: str) -> bool:
@@ -32,6 +40,9 @@ async def check_if_cancelled(flow_run_id: str) -> bool:
     except Exception:
         pass
     return False
+
+def sync_check_if_cancelled(flow_run_id: str) -> bool:
+    return asyncio.run(check_if_cancelled(flow_run_id))
 
 
 def urls_to_database(
@@ -50,7 +61,6 @@ def urls_to_database(
         if context and hasattr(context, 'flow_run'):
             flow_run_id = str(context.flow_run.id)
     except Exception:
-        # Если мы не в контексте flow, продолжаем без проверки отмены
         pass
 
     logger.info(f"🚀 Запуск обработки {len(tasks_to_process)} URL, batch_size={batch_size}")
@@ -59,28 +69,18 @@ def urls_to_database(
     batches = [tasks_to_process[i:i + batch_size] for i in range(0, len(tasks_to_process), batch_size)]
 
     for batch_num, batch in enumerate(batches, 1):
-        # Проверка отмены через API, если у нас есть flow_run_id
-        if flow_run_id:
-            # Используем asyncio для вызова async функции
-            is_cancelled = asyncio.run(check_if_cancelled(flow_run_id))
-            if is_cancelled:
-                logger.warning(f"⏹ Flow отменён, прерываем обработку на батче {batch_num}")
-                # Добавляем необработанные URL в skipped
-                for task_obj in batch:
+        # Проверка отмены через API
+        if flow_run_id and sync_check_if_cancelled(flow_run_id):
+            logger.warning(f"⏹ Flow отменён, прерываем обработку на батче {batch_num}")
+            # Добавляем все оставшиеся задачи в skipped
+            for remaining_batch in batches[batch_num-1:]:
+                for task_obj in remaining_batch:
                     processed_results["skipped"].append({
-                        "url": task_obj.url,
+                        "url": getattr(task_obj, 'url', 'Unknown URL'),
                         "status": "skipped",
                         "error": "Flow cancelled"
                     })
-                # Добавляем оставшиеся батчи в skipped
-                for remaining_batch in batches[batch_num:]:
-                    for task_obj in remaining_batch:
-                        processed_results["skipped"].append({
-                            "url": task_obj.url,
-                            "status": "skipped",
-                            "error": "Flow cancelled"
-                        })
-                break
+            break
 
         logger.info(f"🔧 Батч {batch_num}/{len(batches)} ({len(batch)} URL)")
 
@@ -88,47 +88,55 @@ def urls_to_database(
 
         for i, fut in enumerate(futures):
             # Проверка отмены перед получением результата
-            if flow_run_id:
-                is_cancelled = asyncio.run(check_if_cancelled(flow_run_id))
-                if is_cancelled:
-                    logger.warning("⏹ Flow отменён, прерываем текущий батч")
-                    # Отменяем оставшиеся futures
-                    for j in range(i, len(futures)):
-                        try:
-                            # Пытаемся отменить незавершенные задачи
-                            if not futures[j].done():
-                                futures[j].cancel()
-                            # Добавляем в skipped
-                            processed_results["skipped"].append({
-                                "url": batch[j].url,
-                                "status": "skipped",
-                                "error": "Flow cancelled"
-                            })
-                        except Exception:
-                            pass
-                    # Добавляем оставшиеся батчи в skipped
-                    for remaining_batch_idx in range(batch_num, len(batches)):
-                        for task_obj in batches[remaining_batch_idx]:
-                            processed_results["skipped"].append({
-                                "url": task_obj.url,
-                                "status": "skipped",
-                                "error": "Flow cancelled"
-                            })
-                    break
+            if flow_run_id and asyncio.run(check_if_cancelled(flow_run_id)):
+                logger.warning("⏹ Flow отменён, прерываем текущий батч")
+                # Отменяем оставшиеся futures и добавляем в skipped
+                for j in range(i, len(futures)):
+                    try:
+                        if not futures[j].done():
+                            futures[j].cancel()
+                    except Exception:
+                        pass
+                    processed_results["skipped"].append({
+                        "url": getattr(batch[j], 'url', 'Unknown URL'),
+                        "status": "skipped",
+                        "error": "Flow cancelled"
+                    })
+                # Добавляем оставшиеся батчи в skipped
+                for remaining_batch_idx in range(batch_num, len(batches)):
+                    for task_obj in batches[remaining_batch_idx]:
+                        processed_results["skipped"].append({
+                            "url": getattr(task_obj, 'url', 'Unknown URL'),
+                            "status": "skipped",
+                            "error": "Flow cancelled"
+                        })
+                break
 
             try:
                 res = fut.result()
-                if res["status"] == "completed":
+                # Безопасная проверка ключей
+                status = res.get("status", "unknown")
+                error_msg = res.get("error", "")
+
+                if status == "completed":
                     processed_results["success"].append(res)
-                elif res.get("error") == "Rate limit исчерпан":
+                elif error_msg == "Rate limit исчерпан":
                     processed_results["skipped"].append(res)
                 else:
-                    processed_results["errors"].append(res)
+                    # Гарантируем, что в errors есть все необходимые ключи
+                    error_entry = {
+                        "url": res.get("url", "Unknown URL"),
+                        "status": status,
+                        "error": error_msg or "Unknown error"
+                    }
+                    # Добавляем остальные поля из res
+                    error_entry.update({k: v for k, v in res.items() if k not in error_entry})
+                    processed_results["errors"].append(error_entry)
+
             except Exception as e:
-                # Если задача была отменена или произошла ошибка
                 logger.warning(f"⚠️ Задача прервана или ошибка: {e}")
                 processed_results["skipped"].append({
-                    "url": batch[i].url,
+                    "url": getattr(batch[i], 'url', 'Unknown URL') if i < len(batch) else "Unknown URL",
                     "status": "skipped",
                     "error": str(e)
                 })
