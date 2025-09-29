@@ -6,6 +6,7 @@ const API_BASE
         ? "http://127.0.0.1:4200/api"
         : "/api/python";
 
+// --- Types ---
 export interface LogEntry {
     message: string,
     timestamp: string,
@@ -21,11 +22,20 @@ export interface PrefectError {
 export interface FlowRun {
     id: string,
     state: { type: string, timestamp?: string },
-    deployment_id?: string
+    deployment_id?: string,
+    name?: string
+}
+
+export interface TaskRun {
+    id: string,
+    name: string,
+    state: { type: string },
+    flow_run_id: string
 }
 
 export type Result<T> = { data?: T, error?: PrefectError };
 
+// --- Core request handler ---
 const handleError = (e: unknown, fallback: string): PrefectError =>
     e instanceof HTTPError
         ? { message: e.message, status: e.response.status }
@@ -40,61 +50,124 @@ async function request<T>(fn: () => Promise<T>, fallback: string): Promise<Resul
     }
 }
 
-// --- API wrappers
-export const getDeploymentId = (name: string) =>
-    request(async () => {
-        const deployments = await ky
-            .post(`${API_BASE}/deployments/filter`, { json: { name: { any_: [name] } } })
-            .json<{ id: string, name: string }[]>();
+// --- Suspend + Cancel helpers ---
+async function suspendFlowRun(id: string) {
+    try {
+        await ky.get(`${API_BASE}/flow_runs/${id}`);
+        await ky.post(`${API_BASE}/flow_runs/${id}/set_state`, {
+            json: { state: { type: "SUSPENDED" } },
+        });
+        return { success: true };
+    }
+    catch (e) {
+        if (e instanceof HTTPError && e.response.status === 404) { return { success: false, error: "Flow run не найден (404)" }; }
+        return { success: false, error: (e as Error).message || "Неизвестная ошибка" };
+    }
+}
 
-        return deployments.find((d) => d.name === name)?.id ?? null;
-    }, "Failed to fetch deployment");
+async function cancelFlowRunSafe(id: string) {
+    const suspendResult = await suspendFlowRun(id);
 
-export const createFlowRun = (deploymentId: string, params = {}) =>
-    request(async () => {
-        const res = await ky
-            .post(`${API_BASE}/deployments/${deploymentId}/create_flow_run`, { json: { parameters: params } })
-            .json<{ id: string }>();
+    if (!suspendResult.success) { return suspendResult; }
 
-        return res.id;
-    }, "Failed to create flow run");
-
-export const getFlowRun = (id: string) =>
-    request(() => ky.get(`${API_BASE}/flow_runs/${id}`).json(), "Failed to get flow run");
-
-// 🔥 теперь по умолчанию cascade = true
-export const deleteFlowRun = (id: string, cascade = true) =>
-    request(async () => {
-        await ky.delete(`${API_BASE}/flow_runs/${id}`, { searchParams: { cascade: String(cascade) } });
-        return true;
-    }, "Failed to delete flow run");
-
-export const deleteFlowRuns = (ids: string[], cascade = true) =>
-    Promise.all(ids.map((id) => deleteFlowRun(id, cascade)));
-
-export const cancelFlowRun = (id: string) =>
-    request(async () => {
+    try {
         await ky.post(`${API_BASE}/flow_runs/${id}/cancel`);
-        return true;
-    }, "Failed to cancel flow run");
+        return { success: true };
+    }
+    catch (e) {
+        if (e instanceof HTTPError && e.response.status === 404) { return { success: false, error: "Flow run не найден (404)" }; }
+        return { success: false, error: (e as Error).message || "Неизвестная ошибка" };
+    }
+}
 
-export const setFlowRunState = (id: string, state: string) =>
-    request(async () => {
-        await ky.post(`${API_BASE}/flow_runs/${id}/set_state`, { json: { state: { type: state } } });
-        return true;
-    }, "Failed to set flow run state");
+async function cancelFlowRunWithDependenciesSafe(id: string) {
+    const suspendResult = await suspendFlowRun(id);
 
-export const getFlowRuns = (limit = 50) =>
-    request(() => ky.post(`${API_BASE}/flow_runs/filter`, { json: { limit, sort: "START_TIME_DESC" } }).json(), "Failed to fetch flow runs");
+    if (!suspendResult.success) { return suspendResult; }
 
-export const getLogs = (runId: string, startTime?: Date) =>
-    request(async () => {
-        const logs = await ky
-            .post(`${API_BASE}/logs/filter`, { json: { flow_run_id: { any_: [runId] }, limit: 100, sort: "TIMESTAMP_DESC" } })
-            .json<any[]>();
+    try {
+        await ky.post(`${API_BASE}/flow_runs/${id}/cancel`);
 
-        return logs.filter((log) => !startTime || new Date(log.timestamp) >= startTime);
-    }, "Failed to fetch logs");
+        const taskRuns: TaskRun[] = await ky
+            .post(`${API_BASE}/task_runs/filter`, { json: { flow_run_id: { any_: [id] } } })
+            .json();
 
-export const getFlowRunGraph = (id: string) =>
-    request(() => ky.get(`${API_BASE}/flow_runs/${id}/graph`).json(), "Failed to fetch flow run graph");
+        await Promise.all(taskRuns.map((t) => ky.post(`${API_BASE}/task_runs/${t.id}/cancel`)));
+        return { success: true };
+    }
+    catch (e) {
+        if (e instanceof HTTPError && e.response.status === 404) { return { success: false, error: "Flow run или task run не найден (404)" }; }
+        return { success: false, error: (e as Error).message || "Неизвестная ошибка" };
+    }
+}
+
+// --- API ---
+export const prefectAPI = {
+    deployments: {
+        getById: (name: string) =>
+            request(async () => {
+                const deployments = await ky
+                    .post(`${API_BASE}/deployments/filter`, { json: { name: { any_: [name] } } })
+                    .json<{ id: string, name: string }[]>();
+
+                return deployments.find((d) => d.name === name)?.id ?? null;
+            }, "Failed to fetch deployment"),
+
+        createRun: (deploymentId: string, params = {}) =>
+            request(async () => {
+                const res = await ky
+                    .post(`${API_BASE}/deployments/${deploymentId}/create_flow_run`, { json: { parameters: params } })
+                    .json<{ id: string }>();
+
+                return res.id;
+            }, "Failed to create flow run"),
+    },
+
+    flowRuns: {
+        get: (id: string) => request(() => ky.get(`${API_BASE}/flow_runs/${id}`).json<FlowRun>(), "Failed to get flow run"),
+        list: (limit = 50, sort = "START_TIME_DESC") =>
+            request(() => ky.post(`${API_BASE}/flow_runs/filter`, { json: { limit, sort } }).json<FlowRun[]>(), "Failed to fetch flow runs"),
+
+        cancel: (id: string) => request(() => cancelFlowRunSafe(id), "Failed to cancel flow run"),
+        cancelWithDependencies: (id: string) =>
+            request(() => cancelFlowRunWithDependenciesSafe(id), "Failed to cancel flow run with dependencies"),
+
+        delete: (id: string, cascade = true) =>
+            request(() => ky.delete(`${API_BASE}/flow_runs/${id}`, { searchParams: { cascade: String(cascade) } }), "Failed to delete flow run"),
+
+        setState: (id: string, state: string) =>
+            request(() => ky.post(`${API_BASE}/flow_runs/${id}/set_state`, { json: { state: { type: state } } }), "Failed to set flow run state"),
+    },
+
+    logs: {
+        get: (runId: string, limit = 100, startTime?: Date) =>
+            request(async () => {
+                const logs = await ky
+                    .post(`${API_BASE}/logs/filter`, { json: { flow_run_id: { any_: [runId] }, limit, sort: "TIMESTAMP_DESC" } })
+                    .json<LogEntry[]>();
+
+                return startTime ? logs.filter((l) => new Date(l.timestamp) >= startTime) : logs;
+            }, "Failed to fetch logs"),
+    },
+
+    graph: {
+        get: (flowRunId: string) =>
+            request(() => ky.get(`${API_BASE}/flow_runs/${flowRunId}/graph`).json(), "Failed to fetch flow run graph"),
+    },
+};
+
+// --- Legacy aliases ---
+export const getDeploymentId = prefectAPI.deployments.getById;
+export const createFlowRun = prefectAPI.deployments.createRun;
+export const getFlowRun = prefectAPI.flowRuns.get;
+export const getFlowRuns = prefectAPI.flowRuns.list;
+export const cancelFlowRun = prefectAPI.flowRuns.cancel;
+export const cancelFlowRunWithDependencies = prefectAPI.flowRuns.cancelWithDependencies;
+export const deleteFlowRun = prefectAPI.flowRuns.delete;
+export const setFlowRunState = prefectAPI.flowRuns.setState;
+export const getLogs = prefectAPI.logs.get;
+export const getFlowRunGraph = prefectAPI.graph.get;
+
+// Batch operations
+export const deleteFlowRuns = (ids: string[], cascade = true) =>
+    Promise.all(ids.map((id) => prefectAPI.flowRuns.delete(id, cascade)));

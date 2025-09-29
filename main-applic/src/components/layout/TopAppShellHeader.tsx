@@ -14,14 +14,16 @@ const RootLink = (): React.JSX.Element => {
             gradient={{ from: "gray", to: "rgba(186, 186, 186, 1)", deg: 90 }}
             leftSection={icon}
         >
-            {
-                // eslint-disable-next-line @next/next/no-html-link-for-pages
-                <a href="/" style={{ textDecoration: "none" }}>
-                    <Text style={{ cursor: "pointer", color: "white" }}>
-                        prefect dashboards
-                    </Text>
-                </a>
-            }
+            <a
+                href="/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none" }}
+            >
+                <Text style={{ cursor: "pointer", color: "white" }}>
+                    Prefect Dashboards
+                </Text>
+            </a>
         </Badge>
     );
 };

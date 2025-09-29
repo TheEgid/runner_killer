@@ -65,7 +65,6 @@ const PipelineStarter: React.FC<Props> = ({ deploymentName, autoDeleteRuns = fal
                         {anyError}
                     </Text>
                 )}
-
                 <LogsCard logs={logs} loading={loading} status={status} />
             </Stack>
         </>

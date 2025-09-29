@@ -16,7 +16,10 @@ def process_single_url(task_obj: LightTask, vector_ingestion, logger) -> Dict[st
 
     for attempt in range(1, max_retries + 1):
         try:
-            logger.info(f"🔄 Обработка {task_obj.url} (попытка {attempt})")
+            if attempt == 1:
+                logger.info(f"🔄 Обработка {task_obj.url}")
+            if attempt > 1:
+                logger.info(f"🔄 Обработка {task_obj.url} (попытка {attempt})")
             success = vector_ingestion.ingest_url(task_obj)
             if success:
                 return {"url": task_obj.url, "status": "completed"}
@@ -34,30 +37,24 @@ def process_single_url(task_obj: LightTask, vector_ingestion, logger) -> Dict[st
 
 
 @task(cache_policy=NO_CACHE, retries=3, retry_delay_seconds=10)
-def urls_to_database(tasks_to_process: List, vector_ingestion, logger) -> Dict[str, List[Dict[str, Any]]]:
-    logger.info(f"🚀 Запуск обработки {len(tasks_to_process)} URL")
+def urls_to_database(
+    tasks_to_process: List,
+    vector_ingestion,
+    logger,
+    batch_size: int = 1
+) -> Dict[str, List[Dict[str, Any]]]:
+    logger.info(f"🚀 Запуск обработки {len(tasks_to_process)} URL, batch_size={batch_size}")
 
-    processed_results = {
-        "success": [],
-        "errors": [],
-        "skipped": []
-    }
+    processed_results = {"success": [], "errors": [], "skipped": []}
 
-    chunk_size = 2
-    chunks = [tasks_to_process[i:i + chunk_size] for i in range(0, len(tasks_to_process), chunk_size)]
+    # Разбиваем на батчи
+    batches = [tasks_to_process[i:i + batch_size] for i in range(0, len(tasks_to_process), batch_size)]
 
-    for chunk_num, chunk in enumerate(chunks, 1):
-        logger.info(f"🔧 Обработка {chunk_num}/{len(chunks)} ({len(chunk)} URL)")
-
-        results_futures = [
-            process_single_url.submit(task_obj, vector_ingestion, logger)
-            for task_obj in chunk
-        ]
-
-        chunk_results = [f.result() for f in results_futures]
-
-        # Классифицируем результаты
-        for res in chunk_results:
+    for batch_num, batch in enumerate(batches, 1):
+        logger.info(f"🔧 Обработка {batch_num}/{len(batches)} ({len(batch)} URL)")
+        # Обрабатываем каждый URL в батче
+        for task_obj in batch:
+            res = process_single_url.submit(task_obj, vector_ingestion, logger).result()
             if res["status"] == "completed":
                 processed_results["success"].append(res)
             elif res.get("error") == "Rate limit исчерпан после нескольких попыток":
@@ -65,6 +62,6 @@ def urls_to_database(tasks_to_process: List, vector_ingestion, logger) -> Dict[s
             else:
                 processed_results["errors"].append(res)
 
-    logger.info(f"✅ Все URL обработаны. Итого успешных: {len(processed_results['success'])}, "
+    logger.info(f"✅ Все URL обработаны. Успешно: {len(processed_results['success'])}, "
                 f"ошибок: {len(processed_results['errors'])}, пропущено: {len(processed_results['skipped'])}")
     return processed_results
