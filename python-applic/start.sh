@@ -21,7 +21,7 @@ cd /app
 mkdir -p /root/.prefect
 
 # Запуск сервера
-prefect server start --host 0.0.0.0 --port 4200 &
+PYTHONWARNINGS="ignore" prefect server start --host 0.0.0.0 --port 4200 &
 SERVER_PID=$!
 
 # Ускоренное ожидание API (60s вместо 120s)

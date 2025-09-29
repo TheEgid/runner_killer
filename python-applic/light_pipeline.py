@@ -57,14 +57,14 @@ class LightPipeline:
         light_tasks = None
 
         if self.resume:
-            light_tasks_data = self.cache.get("0_light_tasks")
+            light_tasks_data = self.cache.get("0_a_light_tasks")
             if light_tasks_data:
                 light_tasks = [LightTask(**task_data) for task_data in light_tasks_data]
 
         if not light_tasks:
             light_tasks = self.data_input.read_light_tasks(spreadsheet_id, sheet_name)
             light_tasks_data = [asdict(task) for task in light_tasks]
-            self.cache.set("0_light_tasks", light_tasks_data)
+            self.cache.set("0_a_light_tasks", light_tasks_data)
 
         self.logger.info(f"📖 Прочитано {len(light_tasks)} заданий")
 
@@ -90,7 +90,7 @@ class LightPipeline:
 
         processed_results = None
         if self.resume:
-            processed_results = self.cache.get("0_light_processed_results")
+            processed_results = self.cache.get("0_b_light_processed_results")
 
         if not processed_results:
             processed_results = urls_to_database(
@@ -98,7 +98,7 @@ class LightPipeline:
                 vector_ingestion=self.vector_ingestion,
                 logger=self.logger,
             )
-            self.cache.set("0_light_processed_results", processed_results)
+            self.cache.set("0_b_light_processed_results", processed_results)
 
         # Выводим статистику
         success_count = len(processed_results["success"])

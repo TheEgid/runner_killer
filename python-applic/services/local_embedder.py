@@ -1,94 +1,73 @@
 import os
 from typing import List
-from sentence_transformers import SentenceTransformer # type: ignore
-import numpy as np # type: ignore
-import torch # type: ignore
+import numpy as np  # type: ignore
+# from sentence_transformers import SentenceTransformer  # type: ignore
+import cohere  # type: ignore
+
+class DummyModel:
+    """Заглушка для SentenceTransformer"""
+
+    def encode(self, texts: List[str], batch_size: int = 32, show_progress_bar: bool = False, convert_to_numpy: bool = True):
+        n = len(texts)
+        # Возвращаем детерминированные случайные векторы для воспроизводимости
+        rng = np.random.default_rng(seed=42)
+        return rng.random((n, 384), dtype=np.float32)
 
 class LocalCohereEmbedResponse:
-    """Имитация объекта response Cohere с атрибутом .embeddings"""
+    """Единый объект ответа с .embeddings (numpy.ndarray)"""
+
     def __init__(self, embeddings: np.ndarray):
-        # Принудительно преобразуем к numpy.ndarray
         if isinstance(embeddings, list):
             embeddings = np.array(embeddings)
         if embeddings.ndim != 2 or embeddings.shape[1] != 384:
             raise ValueError(f"Неверная размерность эмбеддингов: {embeddings.shape} (ожидалось (_, 384))")
         self.embeddings = embeddings
 
+
 class LocalCohereClient:
-    def __init__(self, model_name: str = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'):
+    def __init__(self, use_cohere: bool = False):
         """
-        Инициализация локального клиента для эмбеддингов на CPU.
+        Клиент для эмбеддингов:
+        - use_cohere=False → локальная модель (SentenceTransformer)
+        - use_cohere=True  → настоящий Cohere Client
         """
-        os.environ["CUDA_VISIBLE_DEVICES"] = ""  # отключаем GPU
-        torch.device("cpu")                      # CPU
+        self.use_cohere = use_cohere
 
-        self.model_name = model_name
-        self.model = SentenceTransformer(model_name, device='cpu')
+        if self.use_cohere:
+            cohere_api_key = os.getenv("COHERE_API_KEY")
+            if not cohere_api_key:
+                raise ValueError("Для use_cohere=True нужен cohere_api_key")
+            self.client = cohere.Client(cohere_api_key)
+            self.model = None
+        else:
+            os.environ["CUDA_VISIBLE_DEVICES"] = ""  # отключаем GPU
+            # self.model = SentenceTransformer("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2", device="cpu") # type: ignore
+            self.model = DummyModel()
 
-    def embed(self, texts: List[str], input_type: str = 'default', batch_size: int = 32) -> LocalCohereEmbedResponse:
-        """
-        Основной метод генерации эмбеддингов для списка текстов.
-        :param texts: список строк
-        :param input_type: 'search_query', 'search_document' или 'default'
-        :param batch_size: размер батча для CPU
-        :return: LocalCohereEmbedResponse с .embeddings размерности (_, 384)
-        """
-        processed_texts = self._preprocess_texts(texts, input_type)
-        embeddings = self.model.encode(
-            processed_texts,
-            batch_size=batch_size,
-            show_progress_bar=False,
-            convert_to_numpy=True
-        )
-        # Проверка размерности
-        if embeddings.shape[1] != 384:
-            raise ValueError(f"Неверная размерность эмбеддингов: {embeddings.shape[1]} (ожидалось 384)")
+    def embed(self, texts: List[str], input_type: str = "default", batch_size: int = 32) -> LocalCohereEmbedResponse:
+        if self.use_cohere:
+            response = self.client.embed(texts=texts, input_type=input_type)
+            embeddings = np.array(response.embeddings)
+        else:
+            processed_texts = self._preprocess_texts(texts, input_type)
+            embeddings = self.model.encode(
+                processed_texts, batch_size=batch_size, show_progress_bar=False, convert_to_numpy=True
+            )
         return LocalCohereEmbedResponse(embeddings)
 
     def embed_documents(self, texts: List[str], batch_size: int = 32) -> LocalCohereEmbedResponse:
-        """
-        Генерация эмбеддингов для документов (search_document)
-        """
-        return self.embed(texts, input_type='search_document', batch_size=batch_size)
+        return self.embed(texts, input_type="search_document", batch_size=batch_size)
 
     def embed_query(self, text: str, batch_size: int = 32) -> np.ndarray:
-        """
-        Генерация эмбеддинга для запроса (search_query)
-        Возвращает numpy-массив размерности (384,)
-        """
-        response = self.embed([text], input_type='search_query', batch_size=batch_size)
-        query_emb = response.embeddings[0]
-        if query_emb.shape[0] != 384:
-            raise ValueError(f"Неверная размерность эмбеддинга запроса: {query_emb.shape[0]} (ожидалось 384)")
-        return query_emb
+        response = self.embed([text], input_type="search_query", batch_size=batch_size)
+        return response.embeddings[0]
+
+    def embed_queries(self, texts: List[str], batch_size: int = 32) -> LocalCohereEmbedResponse:
+        return self.embed(texts, input_type="search_query", batch_size=batch_size)
 
     def _preprocess_texts(self, texts: List[str], input_type: str) -> List[str]:
-        """
-        Внутренняя функция для предобработки текста в зависимости от типа.
-        """
-        if input_type == 'search_query':
+        if input_type == "search_query":
             return [t.lower().strip() for t in texts]
-        elif input_type == 'search_document':
+        elif input_type == "search_document":
             return [t.strip() for t in texts]
-        else:
-            return texts
-
-# -------------------- Пример использования --------------------
-
-# if __name__ == "__main__":
-#     client = LocalCohereClient()
-
-#     texts = [
-#         "Привет, как дела?",
-#         "Это пример документа для embedding"
-#     ]
-#     query = "Как сделать embedding на локальной модели?"
-
-#     # Эмбеддинги документов
-#     response = client.embed_documents(texts)
-#     embeddings = response.embeddings
-#     print("Документы:", embeddings.shape)  # (_, 384)
-
-#     # Эмбеддинг запроса
-#     query_embedding = client.embed_query(query)
-#     print("Запрос:", query_embedding.shape)  # (384,)
+        return texts

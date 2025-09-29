@@ -1,0 +1,9 @@
+# Prefect settings to disable unwanted config sources
+[pyproject_toml_table_header]
+enabled = false
+
+[toml_file]
+enabled = false
+
+[logging]
+level = "INFO"

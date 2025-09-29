@@ -36,19 +36,26 @@ if (!venvPython) {
 if (!venvPrefect) {
     console.log("Установка deps...");
     execSync(`"${venvPython}" -m pip install --upgrade pip`, { stdio: "inherit" });
-    execSync(`"${venvPython}" -m pip install torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu`, { stdio: "inherit" });
+    // execSync(`"${venvPython}" -m pip install torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu`, { stdio: "inherit" });
     execSync(`"${venvPython}" -m pip install -r "${path.join(pythonAppDir, "requirements.txt")}"`, { stdio: "inherit" });
     venvPrefect = findVenvPrefect()!;
 }
 
-// Функция для запуска процесса с Promise
 function spawnProcess(command: string, args: string[], cwd = pythonAppDir): Promise<void> {
     return new Promise((resolve, reject) => {
         const proc = spawn(command, args, {
             cwd,
             stdio: "inherit",
             shell: process.platform === "win32",
-            env: { ...process.env, PYTHONUTF8: "1", PREFECT_API_URL: "http://127.0.0.1:4200/api" },
+            env: {
+                ...process.env,
+                PYTHONUTF8: "1",
+                PREFECT_API_URL: "http://127.0.0.1:4200/api",
+                // // Полное отключение предупреждений
+                // PYTHONWARNINGS: "ignore",
+                // Или точечное отключение
+                PYTHONWARNINGS: "ignore::UserWarning:pydantic_settings.main",
+            },
         });
 
         proc.on("close", (code) => (code === 0 ? resolve() : reject(new Error(`${command} exited with ${code}`))));

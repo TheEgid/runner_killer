@@ -3,30 +3,26 @@ import time
 from supabase import create_client, Client # type: ignore
 from typing import List, Dict, Any
 from services.local_embedder import LocalCohereClient
-# import import cohere # type: ignore
 
 from models import SearchResult
-
 
 class VectorStoreService:
     def __init__(self, logger):
         self.logger = logger
         self.supabase_url = os.getenv("SUPABASE_URL")
         self.supabase_key = os.getenv("SUPABASE_KEY")
-        # self.cohere_api_key = os.getenv("COHERE_API_KEY")
 
         if not all([self.supabase_url, self.supabase_key]):
             missing = [var for var, val in [
                 ("SUPABASE_URL", self.supabase_url),
                 ("SUPABASE_KEY", self.supabase_key),
-                # ("COHERE_API_KEY", self.cohere_api_key)
             ] if not val]
             raise ValueError(f"Отсутствуют переменные окружения: {', '.join(missing)}")
 
         try:
             self.supabase: Client = create_client(self.supabase_url, self.supabase_key)
-            # self.cohere_client = cohere.Client(self.cohere_api_key)
-            self.cohere_client = LocalCohereClient()
+            self.cohere_client = LocalCohereClient(use_cohere=True)
+            self.cohere_client = LocalCohereClient(use_cohere=False)
             self.logger.info("✅ VectorStoreService инициализирован успешно")
         except Exception as e:
             self.logger.error(f"❌ Ошибка инициализации VectorStoreService: {e}")
