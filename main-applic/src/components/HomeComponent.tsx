@@ -2,8 +2,6 @@ import React from "react";
 import { Anchor, Space } from "@mantine/core";
 import PipelineStarter from "./special/Starter";
 
-const AUTO_DELETE_RUNS = true;
-
 const HomeComponent = (): React.JSX.Element => {
     return (
         <>
@@ -18,7 +16,6 @@ const HomeComponent = (): React.JSX.Element => {
 
             <PipelineStarter
                 deploymentName="seo_content_pipeline_light"
-                autoDeleteRuns={AUTO_DELETE_RUNS}
             />
         </>
     );
