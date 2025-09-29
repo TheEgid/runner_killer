@@ -21,8 +21,9 @@ services:
       NEXT_BASE_PATH: "/ui"
       DATABASE_URL: "${DATABASE_URL}"
       PNPM_HOME: "/root/.pnpm-store"
+      CACHE_DIR: "/app/pipeline_cache"
     volumes:
-      # - ./main-applic/public/temporary:/app/public/temporary
+      - ./python-applic/pipeline_cache:/app/pipeline_cache
       - pnpm_cache:/root/.pnpm-store
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:3006/ui/api/healthcheck"]

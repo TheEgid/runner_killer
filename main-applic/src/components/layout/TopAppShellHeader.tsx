@@ -1,32 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Text, Space, Group, AppShell, Burger, Indicator, Badge } from "@mantine/core";
+import { Text, Space, Group, AppShell, Burger, Indicator } from "@mantine/core";
 import { useUnit } from "effector-react";
 import Link from "next/link";
-import { TiAt } from "react-icons/ti";
 import { $visitor } from "src/models/user-state";
-
-const RootLink = (): React.JSX.Element => {
-    const icon = <TiAt size={12} />;
-
-    return (
-        <Badge
-            variant="gradient"
-            gradient={{ from: "gray", to: "rgba(186, 186, 186, 1)", deg: 90 }}
-            leftSection={icon}
-        >
-            <a
-                href="/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: "none" }}
-            >
-                <Text style={{ cursor: "pointer", color: "white" }}>
-                    Prefect Dashboards
-                </Text>
-            </a>
-        </Badge>
-    );
-};
 
 const TopAppShellHeader = (props: { opened: boolean, toggle: React.MouseEventHandler<HTMLButtonElement> }): React.JSX.Element => {
     const { opened, toggle } = props;
@@ -53,7 +29,6 @@ const TopAppShellHeader = (props: { opened: boolean, toggle: React.MouseEventHan
                             <Text style={{ fontSize: "105%" }} c="gray">универсальный</Text>
                         </Group>
                     </Link>
-                    <RootLink />
                 </Group>
                 <Group justify="flex-end">
                     <Group justify="flex-end" gap={0}>
