@@ -1,5 +1,6 @@
 from dataclasses import asdict
 import os
+from prefect.task_runners import ConcurrentTaskRunner # type: ignore
 from prefect import flow, get_run_logger  # type: ignore
 from cache import Cache
 from light_content.b_1_data_input import LightDataInputStep
@@ -32,7 +33,7 @@ class LightPipeline:
                 vector_store, self.sheets_service, spreadsheet_id, sheet_name, self.logger
             )
 
-    @flow
+    # @flow(task_runner=ConcurrentTaskRunner())
     def run(self, sheet_name: str = "Main"):
         self.logger = get_run_logger()
         spreadsheet_id = os.getenv("GOOGLE_LIGHT_ID")
@@ -41,7 +42,7 @@ class LightPipeline:
 
         self.logger.info("🚀 Запуск LIGHT пайплайна...")
 
-        # ===== ЭТАП 1: ЧТЕНИЕ ДАННЫХ =====
+        # Этап 1: читаем данные
         self._init_stage_1()
         light_tasks_data = self.cache.get("0_a_light_tasks") if self.resume else None
         if light_tasks_data:
@@ -52,35 +53,25 @@ class LightPipeline:
 
         self.logger.info(f"📖 Прочитано {len(light_tasks)} заданий")
 
-        # ===== ЭТАП 2: ВЕКТОРИЗАЦИЯ =====
+        # Этап 2: векторизация
         self._init_stage_2(spreadsheet_id, sheet_name)
-
-        # Фильтруем только валидные URL и задачи для обработки
         valid_tasks = [t for t in light_tasks if t.url and t.url.strip()]
-        tasks_to_process = [
-            t for t in valid_tasks
-            if str(t.status).strip().lower() not in {"completed", "done"}
-        ]
+        tasks_to_process = [t for t in valid_tasks if str(t.status).strip().lower() not in {"completed", "done"}]
         skipped_count = len(valid_tasks) - len(tasks_to_process)
 
         self.logger.info(f"🔗 Валидных URL: {len(valid_tasks)}, к обработке: {len(tasks_to_process)}, пропущено: {skipped_count}")
 
         processed_results = self.cache.get("0_b_light_processed_results") if self.resume else None
         if not processed_results:
-            processed_results = urls_to_database(
-                tasks_to_process=tasks_to_process,
-                vector_ingestion=self.vector_ingestion,
-                logger=self.logger,
-            )
+            processed_results = urls_to_database(tasks_to_process, self.vector_ingestion, self.logger)
             self.cache.set("0_b_light_processed_results", processed_results)
 
-        # Статистика
         stats = {
             "total_found": len(valid_tasks),
             "total_processed": len(tasks_to_process),
             "success": len(processed_results["success"]),
             "errors": len(processed_results["errors"]),
-            "skipped": skipped_count
+            "skipped": skipped_count,
         }
         self.logger.info(f"📊 Статистика: {stats}")
 
@@ -89,8 +80,5 @@ class LightPipeline:
             for err in processed_results["errors"][:5]:
                 self.logger.warning(f"  - {err['url']}: {err['error']}")
 
-        return {
-            "light_tasks": light_tasks,
-            "processed_results": processed_results,
-            "stats": stats
-        }
+        return {"light_tasks": light_tasks, "processed_results": processed_results, "stats": stats}
+#light_tasks = self.data_input.read_light_tasks(spreadsheet_id, sheet_name)
