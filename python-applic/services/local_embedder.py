@@ -1,7 +1,6 @@
 import os
 from typing import List
 import numpy as np  # type: ignore
-# from sentence_transformers import SentenceTransformer  # type: ignore
 import cohere  # type: ignore
 
 class DummyModel:
@@ -9,7 +8,6 @@ class DummyModel:
 
     def encode(self, texts: List[str], batch_size: int = 32, show_progress_bar: bool = False, convert_to_numpy: bool = True):
         n = len(texts)
-        # Возвращаем детерминированные случайные векторы для воспроизводимости
         rng = np.random.default_rng(seed=42)
         return rng.random((n, 384), dtype=np.float32)
 
@@ -22,7 +20,6 @@ class LocalCohereEmbedResponse:
         if embeddings.ndim != 2 or embeddings.shape[1] != 384:
             raise ValueError(f"Неверная размерность эмбеддингов: {embeddings.shape} (ожидалось (_, 384))")
         self.embeddings = embeddings
-
 
 class LocalCohereClient:
     def __init__(self, use_cohere: bool = False):
@@ -41,8 +38,9 @@ class LocalCohereClient:
             self.model = None
         else:
             os.environ["CUDA_VISIBLE_DEVICES"] = ""  # отключаем GPU
-            # self.model = SentenceTransformer("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2", device="cpu") # type: ignore
-            self.model = DummyModel()
+            from sentence_transformers import SentenceTransformer  # type: ignore
+            self.model = SentenceTransformer("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2", device="cpu") # type: ignore
+            # self.model = DummyModel()
 
     def embed(self, texts: List[str], input_type: str = "default", batch_size: int = 32) -> LocalCohereEmbedResponse:
         if self.use_cohere:

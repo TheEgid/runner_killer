@@ -21,7 +21,7 @@ class VectorStoreService:
 
         try:
             self.supabase: Client = create_client(self.supabase_url, self.supabase_key)
-            self.cohere_client = LocalCohereClient(use_cohere=True)
+            # self.cohere_client = LocalCohereClient(use_cohere=True)
             self.cohere_client = LocalCohereClient(use_cohere=False)
             self.logger.info("✅ VectorStoreService инициализирован успешно")
         except Exception as e:

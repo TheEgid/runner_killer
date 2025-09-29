@@ -36,7 +36,7 @@ if (!venvPython) {
 if (!venvPrefect) {
     console.log("Установка deps...");
     execSync(`"${venvPython}" -m pip install --upgrade pip`, { stdio: "inherit" });
-    // execSync(`"${venvPython}" -m pip install torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu`, { stdio: "inherit" });
+    execSync(`"${venvPython}" -m pip install torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu`, { stdio: "inherit" });
     execSync(`"${venvPython}" -m pip install -r "${path.join(pythonAppDir, "requirements.txt")}"`, { stdio: "inherit" });
     venvPrefect = findVenvPrefect()!;
 }

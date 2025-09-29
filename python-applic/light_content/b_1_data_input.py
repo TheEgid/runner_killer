@@ -17,5 +17,5 @@ class LightDataInputStep:
                 status=item.get("status", ""),
                 url=item.get("url", "")
             )
-            for item in data[:3050]
+            for item in data[3400:3450]
         ]
