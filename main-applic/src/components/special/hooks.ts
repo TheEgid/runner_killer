@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useState, useEffect, useCallback, useRef } from "react";
-import {
-    createFlowRun,
-    getFlowRun,
-    getLogs,
-    cancelFlowRunCompletely,
-    getDeploymentId,
-} from "src/tools/prefectApi";
+import { createFlowRun, getFlowRun, getPrefectLogs, cancelFlowRunCompletely, getDeploymentId } from "src/tools/prefectApi";
+import { TERMINAL_STATUSES } from "./Helpers";
 
 export const useDeployment = (deploymentName: string) => {
     const [deploymentId, setDeploymentId] = useState<string | null>(null);
@@ -34,25 +29,33 @@ export const useFlowRun = () => {
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const startTimeRef = useRef<Date | null>(null);
 
-    const updateRun = useCallback(async (id: string) => {
-        if (!id) { return; }
+    const updateRun = useCallback(async (id: string): Promise<boolean> => {
+        if (!id) {
+            return false;
+        }
+
         const { data: flowRun, error: flowError } = await getFlowRun(id);
 
         if (flowError || !flowRun) {
             setError(flowError?.message || "FlowRun not found");
             setStatus("FAILED");
-            return;
+            return true; // Завершено с ошибкой
         }
 
-        setStatus(flowRun.state?.type || "UNKNOWN");
+        const currentStatus = flowRun.state?.type || "UNKNOWN";
+
+        setStatus(currentStatus);
 
         if (startTimeRef.current) {
-            const { data: logsRes } = await getLogs(id, 100, startTimeRef.current);
+            const { data: logsRes } = await getPrefectLogs(id, 100, startTimeRef.current);
 
             if (logsRes) { setLogs(logsRes); }
-
             setRuntime(Math.round((Date.now() - startTimeRef.current.getTime()) / 1000));
         }
+
+        const isCompleted = TERMINAL_STATUSES.includes(currentStatus);
+
+        return isCompleted;
     }, []);
 
     const startFlow = async (deploymentId: string, params = {}) => {
@@ -70,8 +73,26 @@ export const useFlowRun = () => {
             setRunId(data);
             startTimeRef.current = new Date();
             setLogs([]);
+
+            let retryCount = 0;
+            const maxRetryDelay = 10000;
+
+            const poll = async () => {
+                const isComplete = await updateRun(data);
+
+                if (!isComplete) {
+                    retryCount++;
+                    const delay = Math.min(1000 * Math.pow(1.5, retryCount), maxRetryDelay);
+
+                    setTimeout(poll, delay);
+                }
+                else {
+                    intervalRef.current = null;
+                }
+            };
+
             if (!intervalRef.current) {
-                intervalRef.current = setInterval(() => updateRun(data), 2000);
+                void poll();
             }
             await updateRun(data);
         }

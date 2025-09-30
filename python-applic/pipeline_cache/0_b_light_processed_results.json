@@ -1,0 +1,1203 @@
+{
+  "success": [
+    {
+      "url": "https://habr.com/ru/companies/domclick/articles/775066/",
+      "status": "completed"
+    },
+    {
+      "url": "https://habr.com/ru/companies/domclick/articles/827980/",
+      "status": "completed"
+    },
+    {
+      "url": "https://habr.com/ru/companies/domclick/articles/828034/",
+      "status": "completed"
+    },
+    {
+      "url": "https://habr.com/ru/companies/domclick/articles/909720/",
+      "status": "completed"
+    }
+  ],
+  "errors": [],
+  "skipped": [
+    {
+      "url": "https://habr.com/ru/companies/factory5/articles/552226/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/friflex/articles/892822/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/garage8/articles/874326/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/garage8/articles/932530/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/garage8/articles/940756/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/gazprombank/articles/805627/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/glowbyte/articles/753504/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/glowbyte/articles/762164/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/habr_career/articles/846530/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/hh/articles/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/hygger/articles/422131/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/icanchoose/articles/347806/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/io/articles/261083/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/kaiten/articles/813935/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/kokocgroup/articles/878028/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/krita/articles/246785/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/kyocera_ds/articles/218771/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/lamoda/articles/673884/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/lamoda/articles/869990/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/lanit/articles/913818/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/logomachine/articles/337312/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/magnit/articles/899576/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/mvideo/articles/594003/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/netologyru/articles/873674/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/ntechlab/articles/924638/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/onlinepatent/articles/678896/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/onlinepatent/articles/890614/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/otus/articles/878413/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/otus/articles/927846/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/otus/articles/932792/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/ozontech/articles/821383/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/pixel_study/articles/846384/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/pixli/articles/325866/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/productstar/articles/814221/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/pyrobyte/articles/753748/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/pyrobyte/articles/759438/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/redmadrobot/articles/491674/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/redmadrobot/articles/693308/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/redmadrobot/articles/793012/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/rostelecom/articles/684816/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/rshb/articles/793154/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/ruvds/articles/553582/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/ruvds/articles/779274/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/ruvds/articles/816077/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/ruvds/articles/866084/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/sberbank/articles/915760/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/scrumtrek/articles/292600/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/selectel/articles/743578/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/selectel/articles/822315/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/selectel/articles/832518/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/selectel/articles/892244/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/skbkontur/articles/853128/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/skillfactory/articles/839296/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/spbifmo/news/685568/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/T1Holding/articles/670236/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/tbank/articles/326782/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/tbank/articles/890658/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/testograf/articles/800435/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/testograf/articles/817665/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/timeweb/articles/588058/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/timeweb/articles/649365/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/timeweb/articles/754212/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/timeweb/articles/852522/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/timeweb/articles/871864/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/tochka/articles/864908/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/ua-hosting/articles/452086/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/ulmart/articles/378877/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/vdsina/articles/518224/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/vdsina/articles/520238/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/vk/articles/278561/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/vk/articles/932946/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/vtb/articles/674142/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/x-com/articles/713224/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/yandex_praktikum/articles/822955/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/yandex_praktikum/articles/822959/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/yandex_praktikum/articles/833560/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/yandex_praktikum/articles/846256/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/yandex_praktikum/articles/875034/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/yandex/articles/276035/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/yandex/articles/282534/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/companies/youla/articles/540768/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/docs/help/wysiwyg/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/flows/design/articles/rated100/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/news/847300/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/news/864456/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/news/894476/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/news/928818/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/news/929044/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/news/929744/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/news/938916/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/news/944758/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/posts/874888/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/sandbox/190982/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://habr.com/ru/sandbox/205826/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://halvacard.ru/faq/chto-takoe-kobrendingovaya-karta",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://handiz.ru/brand-support/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://handwritter.ru/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://handwrittner.com/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://happy-job.ru/hr-blog/ischem-silnye-storony-kompanii-dlya-formirovaniya-evp/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://harryhatchet.com/o-brende/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://hattomonkey.ru/blog/tpost/53fcboc801-chto-takoe-konstanti-firmennogo-stilya",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://hdstockimages.com/blog/how-to-make-a-behance-presentation-a-step-by-step-guide-for-designers/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://hdstockimages.com/blog/how-to-reply-to-comments-on-behance-engaging-with-your-portfolios-visitors/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://hdstockimages.com/blog/understanding-behance-cover-size-for-optimal-portfolio-presentation/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://he34.ru/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://health-diet.ru/base_of_food/food_187943/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helder.design/en/expertise/brand-strategy/brand-key-template/?download=true",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://hello.sh.agency/blog/repozicionirovanie-tovarov-hvatit-bezhat-ot-peremen",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://hello.sh.agency/blog/struktura-brendbuka",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/forms/quiz",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/forms/test",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/formspoll",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/gallery",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/getstarted",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/https",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/online-store-payments/filters",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/online-store/cart",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/online-store/catalog",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/settings",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/tips/3d-objects",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/tips/images",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/unbroken-space",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/zero",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/zero/advanced-animation",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/zero/animation",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/zero/auto-layout",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/zero/figma-import",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help-ru.tilda.cc/zero/grid",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.behance.net/hc/en-us/articles/204484484-Guide-Comment-Mentions",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.behance.net/hc/en-us/articles/204484614-Guide-Formatting-Images-For-Display-On-Behance",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.behance.net/hc/en-us/articles/360033998134-Guide-Cover-Images",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.descript.com/hc/en-us/articles/38106088202765-Brand-Studio",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.elama.ru/article/76517",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/13402894554519-Export-formats-and-settings",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/15339657135383-Guide-to-variables-in-Figma",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/16262618858903-Change-a-workspace-icon-color-or-description",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/24848334599447-Export-from-Figma-Slides",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/26610806345623-Layers-101-Combine-layers",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/27378154668951-Adjust-text-dimensions-and-resizing",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/27643269375767-Sample-colors-with-the-eyedropper-tool",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/30925881896727-FD4B-Navigate-Figma-Design-files",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/30981948843927-FD4B-Create-the-button",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/30984647753751-FD4B-Components-fundamentals",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/30987538800023-FD4B-Create-the-card-and-container-system",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/31010075634967-FD4B-Assemble-your-portfolio-pages",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/31351261703063-FD4B-Auto-layout-fundamentals",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/31440394517143-Explore-Figma-Draw",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/31616004109847-Create-custom-shapes-with-the-shape-builder-tool",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360038511533-Duplicate-or-copy-files",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360038662654-Guide-to-components-in-Figma",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360038665754-Detach-an-instance-from-the-component",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360038746534-Create-color-text-effect-and-layout-guide-styles",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360039150173-Create-and-insert-component-instances",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360039956434-Guide-to-text-in-Figma-Design",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360039956894-Add-a-font-to-Figma-Design",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360039956914-Adjust-alignment-rotation-position-and-dimensions",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360039956974-Measure-distances-between-layers",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360039956994-Missing-font-alert-in-Figma-Design",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360040028034-Add-images-and-videos-to-designs",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360040028114-Export-from-Figma-Design",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360040314193-Guide-to-prototyping-in-Figma",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360040449713-Add-guides-to-the-canvas-or-frames",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360040449873-Select-layers-and-objects",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360040450133-Shape-tools",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360040450173-Arc-tool-create-arcs-semi-circles-and-rings",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360040450253-Masks",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360040450513-Create-layout-guides",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360040451373-Guide-to-auto-layout",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360040451453-Scale-layers-while-maintaining-proportions",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360040667874-Apply-blend-modes-to-layers-fills-and-effects",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360040675194-Crop-an-image",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360041003114-Import-files-to-the-file-browser",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360041003694-Guide-to-fills",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360041003774-Update-fills-using-the-color-picker",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360041064814-Change-the-background-color-of-the-canvas",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360041065034-Adjust-your-zoom-and-view-options",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360041098433-Adjust-the-properties-of-an-image",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360041486873-Use-animated-GIFs-in-prototypes",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360041539473-Frames-in-Figma-Design",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360047239073-Convert-text-to-vector-paths",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/360050986854-Adjust-corner-radius-and-smoothing",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/4403175325719-Manage-conflicting-fonts",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/4408435431319-Request-to-edit-a-file",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/4409078832791-Copy-and-paste-objects",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/5601429983767-Guide-to-the-Figma-desktop-app",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/5724448965527-View-layer-outlines-in-Figma-Design",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/articles/6956360971415-Change-your-language-preference",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.figma.com/hc/en-us/sections/31830804733207-Tour-the-interface",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.miratext.ru/blog/eto-vam-ne-prosto-chertochki-razbiraemsya-v-defisax-tire-i-minusax",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.pointerpro.com/en/support/solutions/articles/35000041561-how-to-make-a-logo-with-transparent-background-using-gimp-or-photoshop-",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.taptop.pro/ru/notes/slajder",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.tinkoff.ru/currency-ruble/invoice/how-to-pay/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.tinkoff.ru/currency-ruble/invoice/item/",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://help.yandex.ru/npo-page?ogrn=1147799018454&seed=0d8e0cef",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/africa/camera-raw/using/introduction-camera-raw.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ca/illustrator/using/printers-marks-bleeds.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ca/lightroom-cc/using/presets.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ca/lightroom-classic/help/export-presets-settings-plug-ins.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/gr_en/after-effects/using/setting-selecting-deleting-keyframes.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/id_id/photoshop/using/editing-text.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ie/photoshop/using/presets.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/illustrator/using/create-edit-patterns.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/illustrator/using/line-character-spacing.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/illustrator/using/overprinting.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/illustrator/web/get-set-up/access-the-app/access-illustrator-web.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/illustrator/web/get-set-up/learn-the-basics/overview.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/in/photoshop/using/creating-opening-importing-images.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/indesign/using/overprinting.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/lightroom-cc/kb/faq-install-presets-profiles.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/lightroom-cc/using/presets-lightroom-android.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/my_en/photoshop/using/presets.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/my_ms/photoshop/using/presets.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/nz/illustrator/using/adjusting-colors.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/nz/photoshop/using/presets.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ph_fil/after-effects/how-to/glitch-effect.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ph_fil/photoshop/how-to/neon-effect.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/photoshop-elements/using/layer-masks.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/photoshop/using/create-documents.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/photoshop/using/masking-layers.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/photoshop/using/quick-actions/remove-background.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/project-neo/help/overview.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/after-effects/using/animating-text.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/after-effects/using/animation-basics.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/after-effects/using/creating-editing-text-layers.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/after-effects/using/examples-resources-text-animation.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/after-effects/using/layer-markers-composition-markers.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/illustrator/using/add-text-work-with-type-objects.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/illustrator/using/blending-objects.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/illustrator/using/building-new-shapes-using-shape.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/illustrator/using/combining-objects.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/illustrator/using/create-3d-graphics.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/illustrator/using/create-3D-text.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/illustrator/using/create-art-mockups.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/illustrator/using/create-edit-patterns.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    },
+    {
+      "url": "https://helpx.adobe.com/ru/illustrator/using/create-text-with-image-trace.html",
+      "status": "skipped",
+      "error": "Flow cancelled"
+    }
+  ]
+}

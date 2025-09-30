@@ -2,7 +2,8 @@
 import React from "react";
 import { Badge, Button, Group, Stack, Text, Title } from "@mantine/core";
 import { FaPlay, FaRegSquare } from "react-icons/fa";
-import { getBadgeColor, LogsCard } from "./Helpers";
+import { fetchFilesFx } from "src/models/interchange-state";
+import { ACTIVE_STATUSES, getBadgeColor, LogsCard, STOPPABLE_STATUSES, TERMINAL_STATUSES } from "./Helpers";
 import { useDeployment, useFlowRun } from "./hooks";
 
 interface Props {
@@ -17,7 +18,14 @@ const PipelineStarter: React.FC<Props> = ({ deploymentName }) => {
     const anyError
         = deploymentError
         || error
-        || (logs.length === 0 && ["COMPLETED", "FAILED"].includes(status) ? "Ошибка выполнения" : undefined);
+        || (logs.length === 0 && TERMINAL_STATUSES.includes(status) ? "Ошибка выполнения" : undefined);
+
+    const handleStopClick = (): void => {
+        if (runId) {
+            void stopFlow(runId);
+            void fetchFilesFx();
+        }
+    };
 
     return (
         <>
@@ -30,8 +38,8 @@ const PipelineStarter: React.FC<Props> = ({ deploymentName }) => {
                     <Button
                         leftSection={<FaPlay size={18} />}
                         onClick={() => deploymentId && startFlow(deploymentId)}
-                        loading={loading && status === "NOT_STARTED"}
-                        disabled={!deploymentId || ["RUNNING", "PENDING", "SCHEDULED"].includes(status)}
+                        loading={loading && !status}
+                        disabled={!deploymentId || ACTIVE_STATUSES.includes(status)}
                     >
                         Запустить Пайплайн
                     </Button>
@@ -39,14 +47,16 @@ const PipelineStarter: React.FC<Props> = ({ deploymentName }) => {
                     <Button
                         leftSection={<FaRegSquare size={18} />}
                         color="red"
-                        onClick={() => runId && stopFlow(runId)}
+                        onClick={handleStopClick}
                         loading={stopLoading}
-                        disabled={!runId || !["RUNNING", "NOT_STARTED", "SCHEDULED"].includes(status)}
+                        disabled={!runId || !STOPPABLE_STATUSES.includes(status)}
                     >
                         Остановить Пайплайн
                     </Button>
 
-                    {status !== "NOT_STARTED" && <Badge color={getBadgeColor(status)}>{status}</Badge>}
+                    {status && status !== "NOT_STARTED" && (
+                        <Badge color={getBadgeColor(status)}>{status}</Badge>
+                    )}
 
                     {status === "RUNNING" && (
                         <Text size="sm" c="dimmed">

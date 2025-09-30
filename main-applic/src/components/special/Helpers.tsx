@@ -1,16 +1,38 @@
-/* eslint-disable @stylistic/indent */
+
 import React from "react";
 import { Card, Group, Loader, ScrollArea, Text } from "@mantine/core";
 import { TbTerminal } from "react-icons/tb";
 import type { LogEntry } from "src/tools/prefectApi";
 
-export const getBadgeColor = (stat: string): string =>
-({
-    RUNNING: "blue",
-    COMPLETED: "green",
-    FAILED: "red",
-    STOPPED: "orange",
-}[stat] || "gray");
+// Терминальные статусы из Prefect 3 API
+export const TERMINAL_STATUSES = ["COMPLETED", "FAILED", "CANCELLED", "CRASHED"];
+
+// Статусы, когда пайплайн активен (не терминальные)
+export const ACTIVE_STATUSES = ["RUNNING", "PENDING", "SCHEDULED", "RETRYING", "CANCELLING"];
+
+// Статусы, когда можно остановить (активные процессы)
+export const STOPPABLE_STATUSES = ["RUNNING", "PENDING", "SCHEDULED", "RETRYING"];
+
+export const getBadgeColor = (status: string): string => {
+    const colorMap: Record<string, string> = {
+        RUNNING: "blue",
+        PENDING: "yellow",
+        SCHEDULED: "cyan",
+        RETRYING: "orange",
+        CANCELLING: "orange",
+        PAUSED: "violet",
+
+        COMPLETED: "green",
+        FAILED: "red",
+        CANCELLED: "gray",
+        CRASHED: "darkred",
+
+        STOPPED: "orange",
+        UNKNOWN: "gray",
+    };
+
+    return colorMap[status] || "gray";
+};
 
 interface Props {
     logs: LogEntry[],

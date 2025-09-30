@@ -14,7 +14,7 @@ class VectorIngestionService:
         self.sheet_name = sheet_name
         self.logger = logger
 
-        # ✅ Используем SimpleScraperService управляющий LLM
+        # ✅ управляющий LLM
         self.scraper = SimpleScraperService(logger=self.logger, use_llm=True)
         # self.scraper = SimpleScraperService(logger=self.logger, use_llm=False)
 
@@ -33,7 +33,7 @@ class VectorIngestionService:
             )
 
             # ✅ Используем метод scrape_page для гарантии чистого текста
-            content = self.scraper.scrape_page(task.url)
+            content = self.scraper.scrape_page(task.url, use_llm=True)
 
             # ✅ Дополнительная проверка
             if not content or len(content.strip()) < 100:

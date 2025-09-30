@@ -130,7 +130,7 @@ export const prefectAPI = {
             request(() => ky.post(`${API_BASE}/flow_runs/${id}/set_state`, { json: { state: { type: state } } }), "Failed to set flow run state"),
     },
 
-    logs: {
+    fetchLogs: {
         get: (runId: string, limit = 100, startTime?: Date): Promise<Result<LogEntry[]>> =>
             request(async () => {
                 const logs = await ky
@@ -149,4 +149,4 @@ export const getFlowRun = prefectAPI.flowRuns.get;
 export const cancelFlowRunCompletely = prefectAPI.flowRuns.cancelCompletely;
 export const deleteFlowRun = prefectAPI.flowRuns.delete;
 export const setFlowRunState = prefectAPI.flowRuns.setState;
-export const getLogs = prefectAPI.logs.get;
+export const getPrefectLogs = prefectAPI.fetchLogs.get;

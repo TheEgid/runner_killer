@@ -264,7 +264,7 @@ class SimpleScraperService:
             )
             self.logger.info(f"LLM init (delay={js_delay}s).")
 
-    async def get_page_info(self, url: str, use_llm: Optional[bool] = None, max_retries: int = 2) -> Dict[str, Any]:
+    async def get_page_info(self, url: str, use_llm: Optional[bool] = False, max_retries: int = 2) -> Dict[str, Any]:
         if use_llm is None:
             use_llm = False  # Минимально: BS-only
 
@@ -348,10 +348,10 @@ class SimpleScraperService:
             "success": True,
         }
 
-    def get_page_info_sync(self, url: str, use_llm: Optional[bool] = None) -> Dict[str, Any]:
+    def get_page_info_sync(self, url: str, use_llm: Optional[bool] = False) -> Dict[str, Any]:
         return run_coro_as_sync(self.get_page_info(url, use_llm))
 
-    def scrape_page(self, url: str, clean_html: bool = True, use_llm: Optional[bool] = None) -> Optional[str]:
+    def scrape_page(self, url: str, clean_html: bool = True, use_llm: Optional[bool] = False) -> Optional[str]:
         page_info = self.get_page_info_sync(url, use_llm)
         if not page_info["success"]:
             self.logger.error(f"Failed: {page_info.get('error_message', 'Unknown')}")
