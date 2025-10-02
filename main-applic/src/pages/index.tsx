@@ -1,6 +1,7 @@
 import React from "react";
-import { Anchor, Center, Space, Title, Text } from "@mantine/core";
+import { Center, Space, Title, Text } from "@mantine/core";
 import { useUnit } from "effector-react";
+import Link from "next/link";
 import RootComponent from "src/components/common/RootComponent";
 import HomeComponent from "src/components/HomeComponent";
 import { $visitor } from "src/models/user-state";
@@ -15,9 +16,11 @@ const HomePage = (): React.JSX.Element => {
                 <Space h="lg" />
                 <Center>
                     <Text component="div">
-                        <Anchor href="/auth-pages/login/">
-                            <Title order={5}>Войти чтобы увидеть эту страницу</Title>
-                        </Anchor>
+                        <Link href="/auth-pages/login/" style={{ textDecoration: "none" }}>
+                            <Title order={5} style={{ color: "inherit" }}>
+                                Войти чтобы увидеть эту страницу
+                            </Title>
+                        </Link>
                     </Text>
                 </Center>
             </>

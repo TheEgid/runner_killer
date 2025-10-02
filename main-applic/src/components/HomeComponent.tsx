@@ -24,7 +24,7 @@ const RootLink = (): React.JSX.Element => (
 
 const GoogleSheetLink = (): React.JSX.Element => (
     <a
-        href="https://docs.google.com/spreadsheets/d/1oVqo_6XjKnxFtb92xudq2G7oMcuOL5hnCG0uh8stpE0/edit?gid=1904625815#gid=1904625815"
+        href="https://docs.google.com/spreadsheets/d/1oVqo_6XjKnxFtb92xudq2G7oMcuOL5hnCG0uh8stpE0/"
         target="_blank"
         rel="noopener noreferrer"
         style={{ textDecoration: "none" }}

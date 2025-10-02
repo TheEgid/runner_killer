@@ -1,7 +1,8 @@
 import React from "react";
-import { Anchor, Button, Fieldset, Group, Paper, PasswordInput, Space, Stack, TextInput, Title } from "@mantine/core";
+import { Button, Fieldset, Group, Paper, PasswordInput, Space, Stack, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { userRegisterFx } from "src/models/user-state";
 import { waitFor } from "src/tools/some-tools";
@@ -85,9 +86,11 @@ const RegistrationComponent = (): React.JSX.Element => {
                     <Space h="sm" />
                     <Group gap="sm" justify="flex-start" align="flex-start">
                         <Title order={5}>Уже зарегистрированы?</Title>
-                        <Anchor href="/auth-pages/login/">
-                            <Title order={5}>Войти</Title>
-                        </Anchor>
+                        <Link href="/auth-pages/login/" style={{ textDecoration: "none" }}>
+                            <Title order={5} style={{ color: "inherit" }}>
+                                Войти
+                            </Title>
+                        </Link>
                     </Group>
                 </Stack>
             </Paper>

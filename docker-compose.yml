@@ -24,7 +24,6 @@ services:
       CACHE_DIR: "/app/pipeline_cache"
     volumes:
       - ./python-applic/pipeline_cache:/app/pipeline_cache
-      # - pnpm_cache:/root/.pnpm-store
     healthcheck:
       test: ["CMD", "curl", "-f", "-s", "--max-time", "5", "http://localhost:3006/ui/api/healthcheck"]
       interval: 15s
@@ -84,7 +83,7 @@ services:
         ]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 3
       start_period: 30s
 
   prefect-applic:
@@ -123,9 +122,8 @@ services:
       test: ["CMD-SHELL", "redis-cli -a $REDIS_PASSW ping | grep PONG"]
       interval: 10s
       timeout: 3s
-      retries: 5
+      retries: 3
     restart: unless-stopped
 
 volumes:
   database_volume:
-  # pnpm_cache:

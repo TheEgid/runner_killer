@@ -1,7 +1,8 @@
 import React from "react";
-import { Anchor, Button, Fieldset, Group, Paper, PasswordInput, Space, Stack, TextInput, Title } from "@mantine/core";
+import { Button, Fieldset, Group, Paper, PasswordInput, Space, Stack, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { userLoginFx } from "src/models/user-state";
 import { waitFor } from "src/tools/some-tools";
@@ -70,9 +71,11 @@ const LoginComponent = (): React.JSX.Element => {
                     </form>
                     <Group gap="sm" justify="flex-start" align="flex-start">
                         <Title order={5}>Еще не зарегистрированы?</Title>
-                        <Anchor href="/auth-pages/register/">
-                            <Title order={5}>Зарегистрироваться</Title>
-                        </Anchor>
+                        <Link href="/auth-pages/register/" style={{ textDecoration: "none" }}>
+                            <Title order={5} style={{ color: "inherit" }}>
+                                Зарегистрироваться
+                            </Title>
+                        </Link>
                     </Group>
                 </Stack>
             </Paper>
