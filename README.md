@@ -17,3 +17,8 @@ docker buildx prune --all --force
 <!-- SCHEDULED -->
 # Использование curl с cloudflare
 curl -s -o /dev/null -w "Speed: %{speed_download} bytes/sec\n" https://cloudflare.com/cdn-cgi/trace
+
+https://n8n-seo.space/goaccess_web.html
+
+
+

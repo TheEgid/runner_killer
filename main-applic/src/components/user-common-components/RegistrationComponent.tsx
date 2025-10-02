@@ -46,6 +46,7 @@ const RegistrationComponent = (): React.JSX.Element => {
                         <Fieldset legend="" w={600}>
                             <Space h="sm" />
                             <TextInput
+                                disabled={true}
                                 withAsterisk
                                 label="Электронная почта"
                                 placeholder="Электронная почта"
@@ -53,6 +54,7 @@ const RegistrationComponent = (): React.JSX.Element => {
                             />
                             <Space h="sm" />
                             <PasswordInput
+                                disabled={true}
                                 withAsterisk
                                 label="Пароль"
                                 // description="Не менее 6 символов"
@@ -64,6 +66,7 @@ const RegistrationComponent = (): React.JSX.Element => {
                             />
                             <Space h="sm" />
                             <PasswordInput
+                                disabled={true}
                                 withAsterisk
                                 label="Повторите пароль"
                                 placeholder="Повторите пароль"
