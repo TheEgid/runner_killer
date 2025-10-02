@@ -12,8 +12,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      prefect-applic:
-        condition: service_healthy
     restart: on-failure
     env_file:
       - .env
@@ -26,7 +24,7 @@ services:
       CACHE_DIR: "/app/pipeline_cache"
     volumes:
       - ./python-applic/pipeline_cache:/app/pipeline_cache
-      - pnpm_cache:/root/.pnpm-store
+      # - pnpm_cache:/root/.pnpm-store
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:3006/ui/api/healthcheck"]
       interval: 5s
@@ -125,4 +123,4 @@ services:
 
 volumes:
   database_volume:
-  pnpm_cache:
+  # pnpm_cache:

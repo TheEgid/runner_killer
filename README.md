@@ -15,5 +15,4 @@ docker buildx prune --all --force
 # ENV NEXT_PUBLIC_BASE_PATH=/ui
 
 <!-- SCHEDULED -->
-# Использование curl с cloudflare
-curl -s -o /dev/null -w "Speed: %{speed_download} bytes/sec\n" https://cloudflare.com/cdn-cgi/trace
+

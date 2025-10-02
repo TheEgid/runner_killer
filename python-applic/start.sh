@@ -20,23 +20,93 @@ echo '🚀 Starting Prefect server (3.x)...'
 cd /app
 mkdir -p /root/.prefect
 
+> /root/.prefect/prefect.log
+
 # Запуск сервера
 PYTHONWARNINGS="ignore" prefect server start --host 0.0.0.0 --port 4200 &
 SERVER_PID=$!
 
-# Ускоренное ожидание API (60s вместо 120s)
-echo '⏳ Waiting for Prefect API (max 60s)...'
-for i in {1..60}; do
-    if curl -f -s http://localhost:4200/api/health >/dev/null 2>&1; then
-        echo "✅ API ready after ${i}s"
+# Начальная задержка для инициализации
+echo '⏳ Initial server startup (15s)...'
+sleep 15
+
+# Увеличенное ожидание API (90s вместо 60s)
+echo '⏳ Waiting for Prefect API (max 90s on http://localhost:4200/api/health)...'
+
+# Config
+TIMEOUT=90
+HEALTH_URL="http://localhost:4200/api/health"
+TOOL="wget"
+
+# Auto-detect tool
+if command -v curl >/dev/null 2>&1; then
+    TOOL="curl"
+    echo "Using curl for health check"
+elif command -v wget >/dev/null 2>&1; then
+    TOOL="wget"
+    echo "Using wget for health check"
+else
+    echo '❌ Error: Neither curl nor wget found. Install one (e.g., apt install curl).'
+    exit 1
+fi
+
+# Проверка порта
+check_port() {
+    if command -v nc >/dev/null 2>&1; then
+        nc -z localhost 4200 >/dev/null 2>&1
+    else
+        # Если netcat нет, проверяем через /proc
+        ss -tln | grep -q ":4200 " || netstat -tln 2>/dev/null | grep -q ":4200 "
+    fi
+}
+
+# Function for health check
+check_health() {
+    if [ "$TOOL" = "curl" ]; then
+        curl -f -s --max-time=2 "$HEALTH_URL" >/dev/null 2>&1
+    else
+        wget --quiet --tries=1 --timeout=2 --spider "$HEALTH_URL" >/dev/null 2>&1
+    fi
+}
+
+# Polling loop с улучшенной логикой
+for i in $(seq 1 $TIMEOUT); do
+    # Сначала проверяем что порт открыт
+    if ! check_port; then
+        if [ $i -eq $TIMEOUT ]; then
+            echo "❌ Port 4200 not open after ${TIMEOUT}s"
+            echo "📋 Server logs:"
+            timeout 5 tail -n 20 /root/.prefect/prefect.log 2>/dev/null || echo "No logs available"
+            kill "$SERVER_PID" 2>/dev/null || true
+            exit 1
+        fi
+        sleep 1
+        continue
+    fi
+
+    # Затем проверяем HTTP API
+    if check_health; then
+        echo "✅ Prefect API ready after ${i}s"
         break
     fi
-    if [ $i -eq 60 ]; then
-        echo '❌ Prefect server failed to start within 60s'
-        kill $SERVER_PID 2>/dev/null || true
+
+    # Fail если таймаут достигнут
+    if [ $i -eq $TIMEOUT ]; then
+        echo "❌ Prefect server failed to start within ${TIMEOUT}s"
+        echo "📋 Last server logs:"
+        timeout 5 tail -n 30 /root/.prefect/prefect.log 2>/dev/null || echo "No logs available"
+        # Kill server если PID установлен
+        if [ -n "$SERVER_PID" ] && kill -0 "$SERVER_PID" 2>/dev/null; then
+            echo "Killing Prefect server (PID: $SERVER_PID)"
+            kill "$SERVER_PID" 2>/dev/null || true
+        fi
         exit 1
     fi
-    sleep 1
+
+    # Sleep перед следующей проверкой (не на последней итерации)
+    if [ $i -lt $TIMEOUT ]; then
+        sleep 1
+    fi
 done
 
 # Сразу после готовности API создаем work pool
@@ -83,4 +153,5 @@ echo "✅ Prefect 3.x ready! (Server: $SERVER_PID, Worker: $WORKER_PID)"
 
 # Основное ожидание
 wait $SERVER_PID $WORKER_PID 2>/dev/null || true
+echo "🛑 Prefect server stopped"
 exit 0
