@@ -57,5 +57,4 @@ RUN dos2unix start.sh main.py requirements.txt Dockerfile 2>/dev/null || true \
     && mkdir -p /app/prefect
 
 EXPOSE 4200
-
 CMD ["bash", "start.sh"]

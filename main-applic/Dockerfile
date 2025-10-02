@@ -3,7 +3,7 @@ FROM node:23.10.0-bookworm-slim AS builder
 
 # Установка curl
 RUN apt-get update && apt-get install -y --no-install-recommends \
-curl \
+curl wget \
 openssl \
  && rm -rf /var/lib/apt/lists/*
 
@@ -43,7 +43,7 @@ FROM node:23.10.0-bookworm-slim AS application
 
 # CURL
 RUN apt-get update && apt-get install -y --no-install-recommends \
-curl \
+curl wget \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

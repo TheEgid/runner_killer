@@ -26,7 +26,7 @@ services:
       - ./python-applic/pipeline_cache:/app/pipeline_cache
       # - pnpm_cache:/root/.pnpm-store
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:3006/ui/api/healthcheck"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--timeout=1", "--spider", "http://localhost:3006/ui/api/healthcheck"]
       interval: 5s
       timeout: 3s
       retries: 3
@@ -53,7 +53,7 @@ services:
       prefect-applic:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "--silent", "--fail", "http://localhost:80/health"]
+      test: ["CMD", "wget", "--quiet", "--timeout=3", "--spider", "http://localhost:80/health"]
       interval: 5s
       timeout: 3s
       retries: 3
@@ -96,7 +96,7 @@ services:
       PREFECT_UI_API_URL: "http://192.168.1.77/api/python"
       # PREFECT_UI_API_URL: "http://nginx/api/python"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:4200/api/health"]
+      test: ["CMD-SHELL", "wget --quiet --timeout=5 -O - http://127.0.0.1:4200/api/health | grep -q 'true'"]
       interval: 10s
       timeout: 5s
       retries: 3

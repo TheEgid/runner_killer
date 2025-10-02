@@ -5,7 +5,7 @@ USER root
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
-    libpq-dev gcc python3-dev pgloader \
+    libpq-dev gcc python3-dev pgloader wget \
     python3 python3-pip python3-virtualenv \
     dos2unix \
     && rm -rf /var/lib/apt/lists/*

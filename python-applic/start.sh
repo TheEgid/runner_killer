@@ -20,8 +20,6 @@ echo '🚀 Starting Prefect server (3.x)...'
 cd /app
 mkdir -p /root/.prefect
 
-> /root/.prefect/prefect.log
-
 # Запуск сервера
 PYTHONWARNINGS="ignore" prefect server start --host 0.0.0.0 --port 4200 &
 SERVER_PID=$!
@@ -89,24 +87,12 @@ for i in $(seq 1 $TIMEOUT); do
         echo "✅ Prefect API ready after ${i}s"
         break
     fi
-
-    # Fail если таймаут достигнут
-    if [ $i -eq $TIMEOUT ]; then
-        echo "❌ Prefect server failed to start within ${TIMEOUT}s"
-        echo "📋 Last server logs:"
-        timeout 5 tail -n 30 /root/.prefect/prefect.log 2>/dev/null || echo "No logs available"
-        # Kill server если PID установлен
-        if [ -n "$SERVER_PID" ] && kill -0 "$SERVER_PID" 2>/dev/null; then
-            echo "Killing Prefect server (PID: $SERVER_PID)"
-            kill "$SERVER_PID" 2>/dev/null || true
-        fi
+    if [ $i -eq 60 ]; then
+        echo '❌ Prefect server failed to start within 60s'
+        kill $SERVER_PID 2>/dev/null || true
         exit 1
     fi
-
-    # Sleep перед следующей проверкой (не на последней итерации)
-    if [ $i -lt $TIMEOUT ]; then
-        sleep 1
-    fi
+    sleep 1
 done
 
 # Сразу после готовности API создаем work pool
@@ -153,5 +139,4 @@ echo "✅ Prefect 3.x ready! (Server: $SERVER_PID, Worker: $WORKER_PID)"
 
 # Основное ожидание
 wait $SERVER_PID $WORKER_PID 2>/dev/null || true
-echo "🛑 Prefect server stopped"
 exit 0
