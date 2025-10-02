@@ -180,3 +180,7 @@ main-applic/prefect/myenv/*
 **/python-applic/.venv/
 
 repomix-output.xml
+certs/ca_bundle.crt
+certs/certificate.crt
+certs/fullchain.pem
+certs/private.key

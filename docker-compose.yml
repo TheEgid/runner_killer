@@ -37,12 +37,14 @@ services:
     container_name: nginx_container
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./main-applic/public/temporary:/opt/files
       - ./log/report:/opt/report
       - ./.htpasswd:/opt/.htpasswd
       - ./nginx_config/nginx.conf:/etc/nginx/nginx.conf
       - ./log/nginx:/var/log/nginx
+      - ./certs:/etc/nginx/certs:ro
     environment:
       TZ: Europe/Moscow
     depends_on:
@@ -94,6 +96,7 @@ services:
       TZ: "Europe/Moscow"
       PREFECT_API_URL: "http://127.0.0.1:4200/api"
       PREFECT_UI_API_URL: "http://192.168.1.77/api/python"
+      # PREFECT_UI_API_URL: "https://n8n-seo.space//api/python"
       # PREFECT_UI_API_URL: "http://nginx/api/python"
     healthcheck:
       test: ["CMD-SHELL", "wget --quiet --timeout=5 -O - http://127.0.0.1:4200/api/health | grep -q 'true'"]
