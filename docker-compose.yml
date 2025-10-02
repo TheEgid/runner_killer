@@ -12,6 +12,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      prefect-applic:
+        condition: service_healthy
     restart: on-failure
     env_file:
       - .env
@@ -50,6 +52,8 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+      prefect-applic:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "--silent", "--fail", "http://localhost:80/health"]
       interval: 5s
@@ -83,7 +87,7 @@ services:
       retries: 10
       start_period: 30s
 
-  prefect-service:
+  prefect-applic:
     build: ./python-applic
     container_name: python_app_container
     ports:

@@ -10,7 +10,9 @@ all: run clean
 
 
 run:
-	@docker compose build
+# @docker compose build
+	@docker buildx bake prefect-applic
+	@docker buildx bake main-applic
 	@docker compose up -d
 	@docker ps
 

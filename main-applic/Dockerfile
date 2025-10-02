@@ -24,6 +24,9 @@ ENV PATH=$PNPM_HOME:$PATH
 COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma
 
+# Вариант 3: Huawei mirror
+RUN pnpm config set registry https://repo.huaweicloud.com/repository/npm/
+
 # Устанавливаем зависимости
 RUN pnpm install --frozen-lockfile --prefer-offline
 

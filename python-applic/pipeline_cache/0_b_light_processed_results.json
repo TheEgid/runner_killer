@@ -1,79 +1,28 @@
 {
   "success": [
     {
-      "url": "https://habr.com/ru/companies/domclick/articles/775066/",
+      "url": "https://habr.com/ru/companies/glowbyte/articles/753504/",
       "status": "completed"
     },
     {
-      "url": "https://habr.com/ru/companies/domclick/articles/827980/",
+      "url": "https://habr.com/ru/companies/glowbyte/articles/762164/",
       "status": "completed"
     },
     {
-      "url": "https://habr.com/ru/companies/domclick/articles/828034/",
+      "url": "https://habr.com/ru/companies/habr_career/articles/846530/",
       "status": "completed"
     },
     {
-      "url": "https://habr.com/ru/companies/domclick/articles/909720/",
+      "url": "https://habr.com/ru/companies/hh/articles/",
+      "status": "completed"
+    },
+    {
+      "url": "https://habr.com/ru/companies/hygger/articles/422131/",
       "status": "completed"
     }
   ],
   "errors": [],
   "skipped": [
-    {
-      "url": "https://habr.com/ru/companies/factory5/articles/552226/",
-      "status": "skipped",
-      "error": "Flow cancelled"
-    },
-    {
-      "url": "https://habr.com/ru/companies/friflex/articles/892822/",
-      "status": "skipped",
-      "error": "Flow cancelled"
-    },
-    {
-      "url": "https://habr.com/ru/companies/garage8/articles/874326/",
-      "status": "skipped",
-      "error": "Flow cancelled"
-    },
-    {
-      "url": "https://habr.com/ru/companies/garage8/articles/932530/",
-      "status": "skipped",
-      "error": "Flow cancelled"
-    },
-    {
-      "url": "https://habr.com/ru/companies/garage8/articles/940756/",
-      "status": "skipped",
-      "error": "Flow cancelled"
-    },
-    {
-      "url": "https://habr.com/ru/companies/gazprombank/articles/805627/",
-      "status": "skipped",
-      "error": "Flow cancelled"
-    },
-    {
-      "url": "https://habr.com/ru/companies/glowbyte/articles/753504/",
-      "status": "skipped",
-      "error": "Flow cancelled"
-    },
-    {
-      "url": "https://habr.com/ru/companies/glowbyte/articles/762164/",
-      "status": "skipped",
-      "error": "Flow cancelled"
-    },
-    {
-      "url": "https://habr.com/ru/companies/habr_career/articles/846530/",
-      "status": "skipped",
-      "error": "Flow cancelled"
-    },
-    {
-      "url": "https://habr.com/ru/companies/hh/articles/",
-      "status": "skipped",
-      "error": "Flow cancelled"
-    },
-    {
-      "url": "https://habr.com/ru/companies/hygger/articles/422131/",
-      "status": "skipped",
-      "error": "Flow cancelled"
-    },
     {
       "url": "https://habr.com/ru/companies/icanchoose/articles/347806/",
       "status": "skipped",
