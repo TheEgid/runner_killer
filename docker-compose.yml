@@ -26,11 +26,11 @@ services:
       - ./python-applic/pipeline_cache:/app/pipeline_cache
       # - pnpm_cache:/root/.pnpm-store
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--timeout=1", "--spider", "http://localhost:3006/ui/api/healthcheck"]
-      interval: 5s
-      timeout: 3s
+      test: ["CMD", "curl", "-f", "-s", "--max-time", "5", "http://localhost:3006/ui/api/healthcheck"]
+      interval: 15s
+      timeout: 10s
       retries: 3
-      start_period: 10s
+      start_period: 60s
 
   nginx:
     image: nginx:1.27.5-alpine

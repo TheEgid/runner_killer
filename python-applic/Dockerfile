@@ -29,7 +29,7 @@ RUN apt-get update -qq \
 # Установка утилит
 RUN apt-get update -qq \
     && apt-get install -y --no-install-recommends \
-        aria2 wget curl jq bash procps dos2unix file \
+        aria2 wget curl jq bash procps dos2unix file iproute2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -47,8 +47,10 @@ RUN URL="https://download.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp311-cp311-many
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir playwright \
-    && python -m playwright install chromium
+ENV PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright
+
+RUN pip install --no-cache-dir playwright && \
+    python -m playwright install chromium
 
 COPY . .
 

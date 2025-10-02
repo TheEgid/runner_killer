@@ -7,7 +7,7 @@
     "scripts": {
         "upgrade_packages": "pnpm up --latest",
         "build": "pnpm select-schema && dotenvx run -f ../.env -- next build",
-        "start": "dotenvx run -f ../.env -- next start -p 3006",
+        "start": "dotenvx run -f .env -- next start -p 3006",
         "frmt": "eslint . --ignore-pattern \"build/*\" --fix",
         "prisma-generate": "pnpm prisma generate",
         "prisma-push": "pnpm prisma db push",
