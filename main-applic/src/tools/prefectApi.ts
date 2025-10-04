@@ -131,17 +131,20 @@ export const prefectAPI = {
     },
 
     fetchLogs: {
-        get: (runId: string, limit = 200): Promise<Result<LogEntry[]>> =>
+        // ВАЖНО: поддержка массива runIds
+        get: (runIds: string | string[], limit = 200): Promise<Result<LogEntry[]>> =>
             request(async () => {
+                const ids = Array.isArray(runIds) ? runIds : [runIds];
+
                 const allLogs: LogEntry[] = [];
                 let offset = 0;
                 const step = 200;
 
                 while (limit > 0) {
                     const query: Record<string, any> = {
-                        flow_run_id: { any_: [runId] },
+                        flow_run_id: { any_: ids },
                         limit: Math.min(step, limit),
-                        order_by: [{ created: "ASC" }],
+                        order_by: [{ timestamp: "ASC" }],
                         offset,
                     };
 
@@ -151,9 +154,7 @@ export const prefectAPI = {
 
                     if (!logs.length) { break; }
 
-                    // Фильтруем только строки с символом '|'
-                    allLogs.push(...logs.filter((l) => l.message.includes("|")));
-
+                    allLogs.push(...logs); // <- ранее было закомментировано
                     offset += logs.length;
                     limit -= logs.length;
                 }

@@ -27,8 +27,12 @@ $status.on(updateStatus, (_, status) => status);
 $logs
     .on(appendLogs, (state, newLogs) => {
         if (!newLogs?.length) { return state; }
-        const existingSet = new Set(state.map((log) => `${log.timestamp}-${log.message}`));
-        const uniqueNewLogs = newLogs.filter((log) => !existingSet.has(`${log.timestamp}-${log.message}`));
+
+        const key = (log: LogEntry): string =>
+            `${log.flow_run_id ?? "unknown"}-${log.timestamp}-${log.message}`;
+
+        const existingSet = new Set(state.map(key));
+        const uniqueNewLogs = newLogs.filter((log) => !existingSet.has(key(log)));
 
         return [...state, ...uniqueNewLogs].slice(-LOG_LIMIT);
     })

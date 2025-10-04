@@ -34,6 +34,9 @@ export const useFlowRun = (): any => {
     const startTimeRef = useRef<Date | null>(null);
     const lastLogTimestampRef = useRef<string | null>(null);
 
+    // Храним множество всех активных runId, чтобы обновлять логи «со всех айди»
+    const activeRunIdsRef = useRef<Set<string>>(new Set());
+
     const clearTimeouts = useCallback(() => {
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
@@ -41,7 +44,7 @@ export const useFlowRun = (): any => {
         }
     }, []);
 
-    // Обновление run: получаем статус и новые логи (по timestamp)
+    // Обновление run: получаем статус и новые логи (по всем активным runId)
     const updateRun = useCallback(async (id: string): Promise<boolean> => {
         if (!id) { return true; }
 
@@ -57,15 +60,16 @@ export const useFlowRun = (): any => {
 
         updateStatus(currentStatus);
 
-        // // Получаем новые логи с последнего известного timestamp или старта
-        // const sinceTime = lastLogTimestampRef.current
-        //     ? new Date(new Date(lastLogTimestampRef.current).getTime() + 1) // +1 мс, чтобы не дублировать последний лог
-        //     : startTimeRef.current;
+        // Получаем логи сразу по всем активным runId
+        const ids = Array.from(activeRunIdsRef.current);
+        const { data: logsRes, error: logsErr } = await getPrefectLogs(ids.length ? ids : id, 200);
 
-        const { data: logsRes } = await getPrefectLogs(id, 200);
+        if (logsErr) {
+            setError(logsErr.message);
+        }
 
         if (logsRes?.length) {
-            appendLogs(logsRes); // Добавляем новые уникальные логи
+            appendLogs(logsRes); // Добавляем новые уникальные логи (дедуп в сторе)
             const latestLog = logsRes[logsRes.length - 1];
 
             if (latestLog?.timestamp) {
@@ -101,6 +105,9 @@ export const useFlowRun = (): any => {
         updateStatus("PENDING");
         startTimeRef.current = new Date();
 
+        // Добавляем новый runId в множество активных
+        activeRunIdsRef.current.add(runIdFromApi);
+
         const poll = async (): Promise<void> => {
             const done = await updateRun(runIdFromApi);
 
@@ -125,12 +132,20 @@ export const useFlowRun = (): any => {
         updateStatus("CANCELLED");
         if (cancelError) { setError(cancelError.message); }
 
+        // Убираем runId из множества активных
+        activeRunIdsRef.current.delete(id);
+
         void updateRun(id);
         setLoading(false);
     }, [updateRun]);
 
     // Автовозобновление опроса при перезагрузке страницы (если run активный)
     useEffect(() => {
+        // При восстановлении — добавим текущий runId в множество активных
+        if (runId) {
+            activeRunIdsRef.current.add(runId);
+        }
+
         if (runId && status && !TERMINAL_STATUSES.includes(status) && !loading) {
             // Восстанавливаем startTime из persisted runtime (если доступно)
             const estimatedStartTime = runtime > 0 ? new Date(Date.now() - runtime * 1000) : new Date();
@@ -142,7 +157,7 @@ export const useFlowRun = (): any => {
                 lastLogTimestampRef.current = logs[logs.length - 1].timestamp;
             }
 
-            // Запускаем сброс опроса для получения новых логов
+            // Запускаем опрос
             void updateRun(runId);
             const poll = async (): Promise<void> => {
                 const done = await updateRun(runId);
