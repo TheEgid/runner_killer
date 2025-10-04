@@ -131,13 +131,34 @@ export const prefectAPI = {
     },
 
     fetchLogs: {
-        get: (runId: string, limit = 100, startTime?: Date): Promise<Result<LogEntry[]>> =>
+        get: (runId: string, limit = 200): Promise<Result<LogEntry[]>> =>
             request(async () => {
-                const logs = await ky
-                    .post(`${API_BASE}/logs/filter`, { json: { flow_run_id: { any_: [runId] }, limit, sort: "TIMESTAMP_DESC" } })
-                    .json<LogEntry[]>();
+                const allLogs: LogEntry[] = [];
+                let offset = 0;
+                const step = 200;
 
-                return startTime ? logs.filter((l) => new Date(l.timestamp) >= startTime) : logs;
+                while (limit > 0) {
+                    const query: Record<string, any> = {
+                        flow_run_id: { any_: [runId] },
+                        limit: Math.min(step, limit),
+                        order_by: [{ created: "ASC" }],
+                        offset,
+                    };
+
+                    const logs = await ky
+                        .post(`${API_BASE}/logs/filter`, { json: query })
+                        .json<LogEntry[]>();
+
+                    if (!logs.length) { break; }
+
+                    // Фильтруем только строки с символом '|'
+                    allLogs.push(...logs.filter((l) => l.message.includes("|")));
+
+                    offset += logs.length;
+                    limit -= logs.length;
+                }
+
+                return allLogs.slice(-200); // ограничиваем последние 200 логов
             }, "Failed to fetch logs"),
     },
 };

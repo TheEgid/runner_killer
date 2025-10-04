@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useUnit } from "effector-react";
+import { $logs, $runId, $runtime, $status, appendLogs, resetLogs, updateRunId, updateRuntime, updateStatus } from "src/models/flow-run-state";
 import { createFlowRun, getFlowRun, getPrefectLogs, cancelFlowRunCompletely, getDeploymentId } from "src/tools/prefectApi";
 import { TERMINAL_STATUSES } from "./Helpers";
 
@@ -18,131 +20,143 @@ export const useDeployment = (deploymentName: string): { deploymentId: string | 
 };
 
 export const useFlowRun = (): any => {
-    const [runId, setRunId] = useState<string | null>(null);
-    const [status, setStatus] = useState("NOT_STARTED");
-    const [logs, setLogs] = useState<any[]>([]);
-    const [runtime, setRuntime] = useState(0);
+    const { runId, status, logs, runtime } = useUnit({
+        runId: $runId,
+        status: $status,
+        logs: $logs,
+        runtime: $runtime,
+    });
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const startTimeRef = useRef<Date | null>(null);
-    const stopTimeRef = useRef<number | null>(null);
-    const isStoppedRef = useRef(false);
+    const lastLogTimestampRef = useRef<string | null>(null);
 
-    const clearAllTimeouts = useCallback(() => {
+    const clearTimeouts = useCallback(() => {
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
             timeoutRef.current = null;
         }
     }, []);
 
-    const stoppedTooLong = useCallback(() => {
-        return isStoppedRef.current && stopTimeRef.current && (Date.now() - stopTimeRef.current > 12000);
-    }, []);
-
+    // Обновление run: получаем статус и новые логи (по timestamp)
     const updateRun = useCallback(async (id: string): Promise<boolean> => {
         if (!id) { return true; }
-
-        if (stoppedTooLong()) { return true; }
 
         const { data: flowRun, error: flowError } = await getFlowRun(id);
 
         if (flowError || !flowRun) {
-            if (!isStoppedRef.current) {
-                setError(flowError?.message || "FlowRun not found");
-                setStatus("FAILED");
-            }
+            setError(flowError?.message || "FlowRun not found");
+            updateStatus("FAILED");
             return true;
         }
 
         const currentStatus = flowRun.state?.type || "UNKNOWN";
 
-        if (!stoppedTooLong()) {
-            setStatus(currentStatus);
+        updateStatus(currentStatus);
+
+        // // Получаем новые логи с последнего известного timestamp или старта
+        // const sinceTime = lastLogTimestampRef.current
+        //     ? new Date(new Date(lastLogTimestampRef.current).getTime() + 1) // +1 мс, чтобы не дублировать последний лог
+        //     : startTimeRef.current;
+
+        const { data: logsRes } = await getPrefectLogs(id, 200);
+
+        if (logsRes?.length) {
+            appendLogs(logsRes); // Добавляем новые уникальные логи
+            const latestLog = logsRes[logsRes.length - 1];
+
+            if (latestLog?.timestamp) {
+                lastLogTimestampRef.current = latestLog.timestamp; // Обновляем последний timestamp
+            }
         }
 
-        if (startTimeRef.current && !stoppedTooLong()) {
-            const { data: logsRes } = await getPrefectLogs(id, 100, startTimeRef.current);
-
-            if (logsRes) { setLogs(logsRes); }
-            setRuntime(Math.round((Date.now() - startTimeRef.current.getTime()) / 1000));
+        // Обновляем runtime с момента старта
+        if (startTimeRef.current) {
+            updateRuntime(Math.round((Date.now() - startTimeRef.current.getTime()) / 1000));
         }
 
-        return TERMINAL_STATUSES.includes(currentStatus) || stoppedTooLong();
-    }, [stoppedTooLong]);
+        return TERMINAL_STATUSES.includes(currentStatus);
+    }, []);
 
-    const startFlow = async (deploymentId: string, params = {}): Promise<void> => {
+    // Старт flow
+    const startFlow = useCallback(async (deploymentId: string) => {
         setLoading(true);
         setError(null);
-        isStoppedRef.current = false;
-        stopTimeRef.current = null;
+        resetLogs();
+        lastLogTimestampRef.current = null; // Сбрасываем timestamp при новом старте
 
-        const { data, error: startError } = await createFlowRun(deploymentId, params);
+        const { data: runIdFromApi, error } = await createFlowRun(deploymentId, {});
 
-        if (startError) {
-            setError(startError.message);
-            setStatus("FAILED");
+        if (error || !runIdFromApi) {
+            setError(error?.message || "Не удалось создать FlowRun");
+            updateStatus("FAILED");
             setLoading(false);
             return;
         }
 
-        if (!data) {
-            setLoading(false);
-            return;
-        }
-
-        setRunId(data);
+        updateRunId(runIdFromApi);
+        updateStatus("PENDING");
         startTimeRef.current = new Date();
-        setLogs([]);
-        setStatus("PENDING");
-
-        let retryCount = 0;
-        const maxRetryDelay = 10000;
 
         const poll = async (): Promise<void> => {
-            if (stoppedTooLong()) { return; }
+            const done = await updateRun(runIdFromApi);
 
-            const isComplete = await updateRun(data);
-
-            if (!isComplete) {
-                retryCount++;
-                const delay = Math.min(1000 * Math.pow(1.5, retryCount), maxRetryDelay);
-
-                timeoutRef.current = setTimeout(poll, delay);
+            if (!done) {
+                timeoutRef.current = setTimeout(poll, 4000);
             }
             else {
-                clearAllTimeouts();
+                setLoading(false);
             }
-            setLoading(false);
         };
 
-        clearAllTimeouts();
         void poll();
-    };
+    }, [updateRun]);
 
-    const stopFlow = async (id: string): Promise<void> => {
+    // Остановка flow
+    const stopFlow = useCallback(async (id: string) => {
         if (!id) { return; }
-
         setLoading(true);
-        isStoppedRef.current = true;
-        stopTimeRef.current = Date.now();
 
-        const { error: stopError } = await cancelFlowRunCompletely(id);
+        const { error: cancelError } = await cancelFlowRunCompletely(id);
 
-        if (stopError) { setError(stopError.message); }
-        else { setStatus("CANCELLED"); }
+        updateStatus("CANCELLED");
+        if (cancelError) { setError(cancelError.message); }
 
-        await updateRun(id);
+        void updateRun(id);
         setLoading(false);
-    };
+    }, [updateRun]);
 
+    // Автовозобновление опроса при перезагрузке страницы (если run активный)
     useEffect(() => {
-        return (): void => {
-            isStoppedRef.current = true;
-            clearAllTimeouts();
-        };
-    }, [clearAllTimeouts]);
+        if (runId && status && !TERMINAL_STATUSES.includes(status) && !loading) {
+            // Восстанавливаем startTime из persisted runtime (если доступно)
+            const estimatedStartTime = runtime > 0 ? new Date(Date.now() - runtime * 1000) : new Date();
+
+            startTimeRef.current = estimatedStartTime;
+
+            // Устанавливаем последний лог timestamp из persisted логов (если есть)
+            if (logs.length > 0) {
+                lastLogTimestampRef.current = logs[logs.length - 1].timestamp;
+            }
+
+            // Запускаем сброс опроса для получения новых логов
+            void updateRun(runId);
+            const poll = async (): Promise<void> => {
+                const done = await updateRun(runId);
+
+                if (!done) {
+                    timeoutRef.current = setTimeout(poll, 4000);
+                }
+            };
+
+            void poll(); // Возобновляем опрос
+        }
+    }, [runId, status, runtime]);
+
+    useEffect(() => clearTimeouts, [clearTimeouts]);
 
     return { runId, status, logs, runtime, loading, error, startFlow, stopFlow };
 };
